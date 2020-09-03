@@ -1,4 +1,4 @@
-# Winkyface project
+# Winkyface Project
 
-FIT2101 project repository
+FIT2101 Project Repository
 
