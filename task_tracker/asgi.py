@@ -2,7 +2,7 @@
 ASGI config for task_tracker project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
-Just checking - Scott
+Just checking if this works
 For more information on this file, see
 https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 """
