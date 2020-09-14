@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<head>
+    {% if title %}
+        <title>Tracker App - {{ title }}</title>
+    {% else %}
+        <title>Tracker App</title>
+    {% endif %}
+</head>
+<body>
+    {% block content %} {% endblock %}
+</body>
+</html>

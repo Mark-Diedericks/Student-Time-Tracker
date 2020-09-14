@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<head>
-    {% if title %}
-        <title>Tracker App - {{ title }}</title>
-    {% else %}
-        <title>Tracker App</title>
-    {% endif %}
-    <title>Document</title>
-</head>
-<body>
+{% extends "trackerApp/base.html" %}
+{% block content %}
     <h1>Login</h1>
-</body>
-</html>
+{% endblock content %}
