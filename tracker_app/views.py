@@ -3,8 +3,8 @@ from django.http import HttpResponse
 
 # Create your views here.
 def login(request):
-    return HttpResponse("<h1>Project Tracker Login page</h1>")
+    return render(request, 'trackerApp/login.html', {'title': 'Log in'})
 
 #Sign up 
 def signUp(request):
-    return HttpResponse("<h1>Sign Up Page</h1>")
+    return render(request, 'trackerApp/signUp.html', {'title': 'Sign Up'})
