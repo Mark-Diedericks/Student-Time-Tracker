@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+<div class="row dash-content">
+    <div class="item-wrapper" style="padding: auto;">
+        {% for g in groups %}
+            {% include "grouptile.html" with group=g %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
