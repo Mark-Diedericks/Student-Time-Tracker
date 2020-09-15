@@ -1,2 +1,4 @@
 ﻿/.vscode/**
 /django_env/**
+/task_tracker/__pycache__/**
+/tracker_app/__pycache__/**
