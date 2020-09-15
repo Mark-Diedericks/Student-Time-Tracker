@@ -25,6 +25,7 @@ body {
 }
 
 
+
 .border-bottom {
     border-style: solid;
     border-width: 0px 0px 2px 0px;
@@ -46,9 +47,28 @@ body {
     overflow-y: scroll;
 }
 
-.group-tile {
+.group-span {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    z-index: 1000;
+
+    display: inline;
+}
+
+.group-marg {
     margin: 6px auto 6px auto;
 
+    min-height: 96px;
+    max-height: 96px;
+
+    min-width: 220px;
+    max-width: 220px;
+}
+
+.group-size {
     min-height: 96px;
     max-height: 96px;
 

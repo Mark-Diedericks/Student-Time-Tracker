@@ -40,6 +40,9 @@ def userdash(request):
 def groupdash(request, group_id):
     #if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
     #    return redirect('/login/')
+    
+    if True:
+        return render(request, 'groupdash.html', {'group': group_id})
 
     try:                                        # Attempt to get the group from the primary-key (id)
         g = models.Group.objects.get(pk=group_id)
