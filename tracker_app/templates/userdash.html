@@ -2,12 +2,12 @@
 
 {% block page_content %}
 
-<div class="row justify-content-center" style="border-style: none;">
-    <p>Welcome User</p>
-</div>
-
-<div class="row justify-content-center" style="border-style: none; min-height: 100%;">
-    <p>Grid view of groups</p>
+<div class="row dash-content">
+    <div class="item-wrapper" style="padding: auto;">
+        {% for g in groups %}
+            {% include "grouptile.html" with group=g %}
+        {% endfor %}
+    </div>
 </div>
 
 {% endblock %}

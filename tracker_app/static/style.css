@@ -1,14 +1,24 @@
 body {
-    --accent: #2222FF;
+    --accent: #AAAAEE;
 }
 
 .header-height {
+    /* Legacy support, use % */
+    min-height: 8%;
+    max-height: 8%;
+    height: 8%;
+
     min-height: 8vh;
     max-height: 8vh;
     height: 8vh;
 }
 
 .content-height {
+    /* Legacy support, use % */
+    min-height: 92%;
+    max-height: 92%;
+    height: 92%;
+
     min-height: 92vh;
     max-height: 92vh;
     height: 92vh;
@@ -25,4 +35,37 @@ body {
     border-style: solid;
     border-color: var(--accent);
     border-width: 0px 2px 0px 0px;
+}
+
+.dash-content {
+    margin: 24px 8px 24px 8px; 
+    min-height: calc(92vh - 48px);
+    max-height: calc(92vh - 48px);
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.group-tile {
+    margin: 6px auto 6px auto;
+
+    min-height: 96px;
+    max-height: 96px;
+
+    min-width: 220px;
+    max-width: 220px;
+}
+
+.group-inner {
+    min-height: 96px;
+    max-height: 96px;
+
+    min-width: 220px;
+    max-width: 220px;
+
+    border-style: solid;
+    border-color: var(--accent);
+    border-width: 1px 1px 1px 1px;
+
+    text-align: center;
 }

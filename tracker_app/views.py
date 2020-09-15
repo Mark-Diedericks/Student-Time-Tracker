@@ -28,7 +28,7 @@ def userdash(request):
 
     try:
         #g = list(models.Group.objects.filter(users__contains=request.user))      # Get QuerySet of all groups the user belongs to
-        g = []
+        g = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     except:
         raise Http404("Could not get User's groups")
     else:
