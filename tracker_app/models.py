@@ -1,15 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 from django.contrib.postgres.fields import ArrayField
+from django.core.validators import int_list_validator
 
 
 # Create your models here.
 class GroupMember(models.Model):
     ## user attribute (not quite sure how to store. models.User()? models.ForeignKey(User())?)
-    roles = models.ArrayField(
-        models.CharField(max_length = 20),
-        size = 10, # at most you can have 10 roles (had to specify this param)
-    )
+    person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Role(models.IntegerChoices):
+        ADMIN = 0,
+        LEADER = 1,
+        DEVELOPER = 2,
+        
+    roles = models.CharField(validators=int_list_validator)
     
 
 class MemberEntry(models.Model):
@@ -20,7 +26,9 @@ class MemberEntry(models.Model):
 class Group(models.Model):
     groupName = models.CharField(max_length = 30)
     unitCode = models.CharField(max_length = 7)
-    members = models.ManyToManyField(User, through = "GroupMember")
+
+    members = models.ManyToManyField(GroupMember)
+    tasks = models.ManyToManyField(TaskCategory)
 
 
 class TaskCategory(models.Model):
