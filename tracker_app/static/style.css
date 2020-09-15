@@ -1,0 +1,28 @@
+body {
+    --accent: #2222FF;
+}
+
+.header-height {
+    min-height: 8vh;
+    max-height: 8vh;
+    height: 8vh;
+}
+
+.content-height {
+    min-height: 92vh;
+    max-height: 92vh;
+    height: 92vh;
+}
+
+
+.border-bottom {
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+    border-color: var(--accent);
+}
+
+.border-right {
+    border-style: solid;
+    border-color: var(--accent);
+    border-width: 0px 2px 0px 0px;
+}
