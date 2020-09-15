@@ -16,6 +16,8 @@ class TaskCategory(models.Model):
 
 class GroupMember(models.Model):
     ## user attribute (not quite sure how to store. models.User()? models.ForeignKey(User())?)
+    person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
     roles = models.ListCharField(
         base_field = models.CharField(max_length = 20),
         size = 10, # at most you can have 10 roles (had to specify this param)
