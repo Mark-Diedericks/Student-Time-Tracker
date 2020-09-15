@@ -1,5 +1,27 @@
+:root {
+    --background0: #f5f4f4;
+    --background1: #fcfbfb;
+    --background2: #ffffff;
+
+    --foreground0: #0e1519;
+    --foreground1: #187FA6;
+    --foreground2: #fcfbfb;
+
+    --accentbackground: #45687b;
+    --accent0: #45687b;
+    --accent1: #839eaa;
+    --accent2: #9db1ba;
+    --accent3: #b4c3ca;
+    --accent4: #e1e7ea;
+    --accent5: #f0f3f4;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--foreground0)
+}
+
 body {
-    --accent: #AAAAEE;
+    color: var(--foreground0)
 }
 
 .header-height {
@@ -29,12 +51,12 @@ body {
 .border-bottom {
     border-style: solid;
     border-width: 0px 0px 2px 0px;
-    border-color: var(--accent);
+    border-color: var(--accent0);
 }
 
 .border-right {
     border-style: solid;
-    border-color: var(--accent);
+    border-color: var(--accent0);
     border-width: 0px 2px 0px 0px;
 }
 
@@ -58,34 +80,54 @@ body {
     display: inline;
 }
 
-.group-marg {
-    margin: 6px auto 6px auto;
-
-    min-height: 96px;
-    max-height: 96px;
-
-    min-width: 220px;
-    max-width: 220px;
+.group-outter {
+    margin: 20px 10px 20px 10px;
 }
 
 .group-size {
-    min-height: 96px;
-    max-height: 96px;
+    min-height: 144px;
+    max-height: 144px;
+    height: 144px;
 
-    min-width: 220px;
-    max-width: 220px;
+    min-width: 192px;
+    max-width: 192px;
+    width: 192px;
 }
 
 .group-inner {
-    min-height: 96px;
-    max-height: 96px;
-
-    min-width: 220px;
-    max-width: 220px;
-
     border-style: solid;
-    border-color: var(--accent);
+    border-color: var(--background2);
     border-width: 1px 1px 1px 1px;
+    border-radius: 20px;
+
+    box-shadow: 6px 6px 12px 0px #999999;
+    background: var(--background2);
+
+    color: var(--foreground1);
 
     text-align: center;
+    overflow: hidden;
+
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.tile-head {
+    margin-top: 10%;
+
+    color: var(--foreground1);
+    max-width: 192px;
+    max-height: 72px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+
+    display: block;
+}
+
+.tile-desc {
+    color: var(--foreground1);
+    max-width: 192px;
+    max-height: 24px;
 }
