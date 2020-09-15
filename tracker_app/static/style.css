@@ -1,0 +1,128 @@
+:root {
+    --background0: #f5f4f4;
+    --background1: #fcfbfb;
+    --background2: #ffffff;
+
+    --accent0: #0e1519;
+    --accent1: #32312c;
+    --accent2: #187FA6;
+    --accent3: #693464;
+    --accent4: #c61a26;
+    --accent5: #45687b;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--accent0)
+}
+
+body {
+    color: var(--accent0)
+}
+
+.header-height {
+    /* Legacy support, use % */
+    min-height: 8%;
+    max-height: 8%;
+    height: 8%;
+
+    min-height: 8vh;
+    max-height: 8vh;
+    height: 8vh;
+}
+
+.content-height {
+    /* Legacy support, use % */
+    min-height: 92%;
+    max-height: 92%;
+    height: 92%;
+
+    min-height: 92vh;
+    max-height: 92vh;
+    height: 92vh;
+}
+
+
+
+.border-bottom {
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+    border-color: var(--accent5);
+}
+
+.border-right {
+    border-style: solid;
+    border-color: var(--accent5);
+    border-width: 0px 2px 0px 0px;
+}
+
+.dash-content {
+    margin: 24px 8px 24px 8px; 
+    min-height: calc(92vh - 48px);
+    max-height: calc(92vh - 48px);
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.group-span {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    z-index: 1000;
+
+    display: inline;
+}
+
+.group-outter {
+    margin: 20px 10px 20px 10px;
+}
+
+.group-size {
+    min-height: 144px;
+    max-height: 144px;
+    height: 144px;
+
+    min-width: 192px;
+    max-width: 192px;
+    width: 192px;
+}
+
+.group-inner {
+    border-style: solid;
+    border-color: var(--background2);
+    border-width: 1px 1px 1px 1px;
+    border-radius: 20px;
+
+    box-shadow: 6px 6px 12px 0px #999999;
+    background: var(--background2);
+
+    color: var(--accent1);
+
+    text-align: center;
+    overflow: hidden;
+
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.tile-head {
+    margin-top: 10%;
+
+    color: var(--accent2);
+    max-width: 192px;
+    max-height: 72px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+
+    display: block;
+}
+
+.tile-desc {
+    color: var(--accent1);
+    max-width: 192px;
+    max-height: 24px;
+}
