@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 class Group(models.Model):
     groupName = models.CharField(max_length = 30)
     unitCode = models.CharField(max_length = 7)
-    members = models.ManyToManyField(User, through = "GroupMember")
+    members = models.ManyToManyField(GroupMember)
+    tasks = models.ManyToManyField(TaskCategory)
 
 class TaskCategory(models.Model):
     categoryName = models.CharField(max_length = 30)
