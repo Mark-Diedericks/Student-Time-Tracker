@@ -17,7 +17,11 @@ def index(request):
 
 
 def login(request):
-    return HttpResponse('TODO: Login page')
+    return render(request, 'trackerApp/login.html', {'title': 'Log Ins'})
+
+#Sign up 
+def signUp(request):
+    return render(request, 'trackerApp/signUp.html', {'title': 'Sign Up'})
 
 
 
