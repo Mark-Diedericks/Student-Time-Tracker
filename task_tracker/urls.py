@@ -15,8 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from users import views as users_views
+from tracker_app import views as appView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('tracker_app.urls'))
+    path('register/', users_views.register, name='register'),
+    path('', include('tracker_app.urls')),
+    path('dashboard/', appView.userdash, name='userdash'),
+
+
 ]
