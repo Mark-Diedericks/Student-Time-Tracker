@@ -3,25 +3,20 @@
     --background1: #fcfbfb;
     --background2: #ffffff;
 
-    --foreground0: #0e1519;
-    --foreground1: #187FA6;
-    --foreground2: #fcfbfb;
-
-    --accentbackground: #45687b;
-    --accent0: #45687b;
-    --accent1: #839eaa;
-    --accent2: #9db1ba;
-    --accent3: #b4c3ca;
-    --accent4: #e1e7ea;
-    --accent5: #f0f3f4;
+    --accent0: #0e1519;
+    --accent1: #32312c;
+    --accent2: #187FA6;
+    --accent3: #693464;
+    --accent4: #c61a26;
+    --accent5: #45687b;
 }
 
 h1, h2, h3, h4, h5 {
-    color: var(--foreground0)
+    color: var(--accent0)
 }
 
 body {
-    color: var(--foreground0)
+    color: var(--accent0)
 }
 
 .header-height {
@@ -51,12 +46,12 @@ body {
 .border-bottom {
     border-style: solid;
     border-width: 0px 0px 2px 0px;
-    border-color: var(--accent0);
+    border-color: var(--accent5);
 }
 
 .border-right {
     border-style: solid;
-    border-color: var(--accent0);
+    border-color: var(--accent5);
     border-width: 0px 2px 0px 0px;
 }
 
@@ -103,7 +98,7 @@ body {
     box-shadow: 6px 6px 12px 0px #999999;
     background: var(--background2);
 
-    color: var(--foreground1);
+    color: var(--accent1);
 
     text-align: center;
     overflow: hidden;
@@ -115,7 +110,7 @@ body {
 .tile-head {
     margin-top: 10%;
 
-    color: var(--foreground1);
+    color: var(--accent2);
     max-width: 192px;
     max-height: 72px;
 
@@ -127,7 +122,7 @@ body {
 }
 
 .tile-desc {
-    color: var(--foreground1);
+    color: var(--accent1);
     max-width: 192px;
     max-height: 24px;
 }
