@@ -28,8 +28,8 @@ def signUp(request):
 
 
 def userdash(request):
-    #if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
-    #    return redirect('/login/')
+    if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
+        return redirect('/login/')
 
     def is_owner(g):
         if g is None:
@@ -64,8 +64,8 @@ def userdash(request):
 
 
 def groupdash(request, group_id):
-    #if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
-    #    return redirect('/login/')
+    if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
+        return redirect('/login/')
     
     if True:
         return render(request, 'groupdash.html', {'group': group_id})
