@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render, get_object_or_404
-
+from .forms import GroupForm
 from tracker_app import models
 
 # Create your views here.
@@ -57,3 +57,9 @@ def groupdash(request, group_id):
 
     else:                                       # Group was found, 
         return render(request, 'groupdash.html', {'group': g})
+
+
+def CreateGroup(request):
+    form = GroupForm()
+    context = {'form':form}
+    return render(request,'creategroup.html',context)
