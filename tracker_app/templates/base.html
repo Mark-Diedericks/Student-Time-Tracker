@@ -25,6 +25,13 @@
                 <div class="col-8">
                     <p>Stuff</p>
                 </div>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link mr-4" href="{% url 'profile' %}">Profile</a>
+                </div>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                </div>
+
 
                 <div class="col-4 text-right">
                     <p>{{request.user.first_name}}</p>
