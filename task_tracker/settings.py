@@ -127,5 +127,6 @@ STATICFILES_FINDERS = [
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-#Redirects user to ? after login
+#Redirects user to dashboard after login
 LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_URL = 'login'
