@@ -1,12 +1,12 @@
 {% extends "trackerApp/logInBase.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h1>Sign Up</h1>
+    <h1>Log In</h1>
     <div class = "content-section">
         <form method="POST">
             {% csrf_token %}
             <fieldset class = "form-group">
-                <legend class = "border-bottom mb-4">Log In</legend> 
+                <!-- <legend class = "border-bottom mb-4">Log In</legend>  -->
                 {{ form| crispy }}
             </fieldset>
             <div class = "form-group">
