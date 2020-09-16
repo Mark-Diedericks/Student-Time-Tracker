@@ -4,10 +4,9 @@ from django.core.validators import int_list_validator
 
 
 # Create your models here.
-class GroupMember(models.Model):
-    ## user attribute (not quite sure how to store. models.User()? models.ForeignKey(User())?)
-    person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
+class GroupMember(models.Model):
+    person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     roles = models.CharField(validators=[int_list_validator], max_length=10)
     
 

@@ -31,6 +31,10 @@ def userdash(request):
     if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
         return redirect('/login/')
 
+    # Check if user is staff, temp TODO
+    staff = request.user.groups.filter(name = "Editors").exists()
+
+    # Check if user is owner of a group
     def is_owner(g):
         if g is None:
             return False
@@ -54,11 +58,10 @@ def userdash(request):
                     if mem.person == request.user:
                         g.append((group, str(mem.roles).contains(0)))
 
-        #g = ["Group 1", "Group 2", "Group 3", "Group 4", "ABC Group", "DEF Group", "GHI Group", "JKL Group", "Long Name Group Name Long", "Other Group"]
     except:
         raise Http404("Could not get User's groups")
     else:
-        return render(request, 'userdash.html', {'groups': g })
+        return render(request, 'userdash.html', {'groups': g, "is_staff": staff})
 
 
 
