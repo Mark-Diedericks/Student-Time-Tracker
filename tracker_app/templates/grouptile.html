@@ -1,15 +1,15 @@
 <div class="item group-outter group-size" style="position: relative; display: inline-block;">
     <div class=" group-inner group-size">
-        {% if group == "Group 1" %} <!-- Should check if user is the Admin of that group -->
-            <h3 class="tile-head" style="color: var(--accent3);">{{ group }}</h3>
+        {% if is_owner %}
+            <h3 class="tile-head" style="color: var(--accent3);">{{ member.group.groupName }}</h3>
         {% else %}
-            <h3 class="tile-head">{{ group }}</h3>
+            <h3 class="tile-head">{{ member.group.groupName }}</h3>
         {% endif %}
 
-        <p class="tile-desc">Unit Code</p>
+        <p class="tile-desc">{{ member.group.unitCode }}</p>
     </div>
 
-    <a href="/dashboard/{{group}}/" style="cursor: pointer;">
+    <a href="/dashboard/{{ member.group.pk }}/" style="cursor: pointer;">
         <span class="group-span group-size"></span>
     </a>
 </div>

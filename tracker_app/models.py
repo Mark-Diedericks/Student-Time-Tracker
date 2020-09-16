@@ -1,34 +1,32 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import ArrayField
+from django.core.validators import int_list_validator
 
 
 # Create your models here.
-class GroupMember(models.Model):
-    ## user attribute (not quite sure how to store. models.User()? models.ForeignKey(User())?)
-    roles = models.ArrayField(
-        models.CharField(max_length = 20),
-        size = 10, # at most you can have 10 roles (had to specify this param)
-    )
-    
-
-class MemberEntry(models.Model):
-    groupMember = models.ForeignKey(GroupMember)
-    hoursSpent = models.IntegerField()
-
 
 class Group(models.Model):
     groupName = models.CharField(max_length = 30)
     unitCode = models.CharField(max_length = 7)
-    members = models.ManyToManyField(User, through = "GroupMember")
+
+class GroupMember(models.Model):
+    person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    roles = models.CharField(validators=[int_list_validator], max_length=10)
+
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+    
+
+class MemberEntry(models.Model):
+    groupMember = models.ForeignKey(GroupMember, on_delete=models.SET_NULL, null=True, blank=True)
+    hoursSpent = models.IntegerField()
+
 
 
 class TaskCategory(models.Model):
     categoryName = models.CharField(max_length = 30)
     description = models.TextField()
     submitted = models.BooleanField()
-    submittedBy = models.ForeignKey(MemberEntry)
+    submittedBy = models.ForeignKey(MemberEntry, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
 
-
-
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
