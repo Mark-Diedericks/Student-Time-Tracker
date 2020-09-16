@@ -5,7 +5,7 @@
 <div class="row dash-content">
     <div class="item-wrapper" style="padding: auto;">
         {% for g in groups %}
-            {% include "grouptile.html" with group=g %}
+            {% include "grouptile.html" with group=g.0 is_owner=g.1 %}
         {% endfor %}
     </div>
 </div>

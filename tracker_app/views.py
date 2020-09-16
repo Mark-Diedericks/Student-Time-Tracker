@@ -31,13 +31,34 @@ def userdash(request):
     #if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
     #    return redirect('/login/')
 
+    def is_owner(g):
+        if g is None:
+            return False
+
+        for mem in list(g.members.all()):
+            if str(mem.roles).contains(0):   # Owner key
+                return True
+
+        return False
+
     try:
-        g = list(models.Group.objects.all()) #.filter(members__contains=request.user))      # Get QuerySet of all groups the user belongs to
+        all_groups = list(models.Group.objects.all())       # Get all groups
+        g = []
+
+        if request.user.is_superuser:                       # Display all groups for site admin
+            for group in all_groups:
+                g.append((group, True))
+        else:                                               # For normal users (tutor/student), display their groups
+            for group in all_groups:
+                for mem in list(group.members.all()):
+                    if mem.person == request.user:
+                        g.append((group, str(mem.roles).contains(0)))
+
         #g = ["Group 1", "Group 2", "Group 3", "Group 4", "ABC Group", "DEF Group", "GHI Group", "JKL Group", "Long Name Group Name Long", "Other Group"]
     except:
         raise Http404("Could not get User's groups")
     else:
-        return render(request, 'userdash.html', {'groups': g})
+        return render(request, 'userdash.html', {'groups': g })
 
 
 

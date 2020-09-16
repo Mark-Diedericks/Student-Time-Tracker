@@ -8,11 +8,6 @@ class GroupMember(models.Model):
     ## user attribute (not quite sure how to store. models.User()? models.ForeignKey(User())?)
     person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
-    #class Role(models.IntegerChoices):
-    #    ADMIN = 0,
-    #    LEADER = 1,
-    #    DEVELOPER = 2,
-
     roles = models.CharField(validators=[int_list_validator], max_length=10)
     
 
