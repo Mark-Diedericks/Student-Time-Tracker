@@ -32,8 +32,8 @@ def userdash(request):
     #    return redirect('/login/')
 
     try:
-        #g = list(models.Group.objects.filter(users__contains=request.user))      # Get QuerySet of all groups the user belongs to
-        g = ["Group 1", "Group 2", "Group 3", "Group 4", "ABC Group", "DEF Group", "GHI Group", "JKL Group", "Long Name Group Name Long", "Other Group"]
+        g = list(models.Group.objects.all()) #.filter(members__contains=request.user))      # Get QuerySet of all groups the user belongs to
+        #g = ["Group 1", "Group 2", "Group 3", "Group 4", "ABC Group", "DEF Group", "GHI Group", "JKL Group", "Long Name Group Name Long", "Other Group"]
     except:
         raise Http404("Could not get User's groups")
     else:
