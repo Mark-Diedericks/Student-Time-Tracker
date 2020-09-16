@@ -1,7 +1,7 @@
 from django.forms import ModelForm
-from .models import Group
+import tracker_app.models as models
 
 class GroupForm(ModelForm):
     class Meta:
-        model = Group
-        fiels = '__all__'
+        model = models.Group
+        fields = '__all__'
