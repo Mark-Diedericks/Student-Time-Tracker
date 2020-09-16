@@ -34,34 +34,17 @@ def userdash(request):
     # Check if user is staff, temp TODO
     staff = request.user.groups.filter(name = "Editors").exists()
 
-    # Check if user is owner of a group
-    def is_owner(g):
-        if g is None:
-            return False
-
-        for mem in list(g.members.all()):
-            if str(mem.roles).contains(0):   # Owner key
-                return True
-
-        return False
-
     try:
-        all_groups = list(models.Group.objects.all())       # Get all groups
-        g = []
-
-        if request.user.is_superuser:                       # Display all groups for site admin
-            for group in all_groups:
-                g.append((group, True))
-        else:                                               # For normal users (tutor/student), display their groups
-            for group in all_groups:
-                for mem in list(group.members.all()):
-                    if mem.person == request.user:
-                        g.append((group, str(mem.roles).contains(0)))
+        all_members = list(models.GroupMember.objects.all())    # Get all members
+        mems = []                                         # For normal users (tutor/student), display their groups
+        for mem in all_members:
+            if mem.person == request.user:
+                mems.append((mem, "0" in mem.roles))
 
     except:
         raise Http404("Could not get User's groups")
     else:
-        return render(request, 'userdash.html', {'groups': g, "is_staff": staff})
+        return render(request, 'userdash.html', {'members': mems, "is_staff": staff, 'title': ""})
 
 
 
@@ -69,19 +52,20 @@ def userdash(request):
 def groupdash(request, group_id):
     if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
         return redirect('/login/')
-    
-    if True:
-        return render(request, 'groupdash.html', {'group': group_id})
+
+    # Check if user is staff, temp TODO
+    staff = request.user.groups.filter(name = "Editors").exists()
 
     try:                                        # Attempt to get the group from the primary-key (id)
         g = models.Group.objects.get(pk=group_id)
+        members = list(models.GroupMember.objects.filter(group = g))
 
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
 
     else:                                       # Group was found, 
-        return render(request, 'groupdash.html', {'group': g})
+        return render(request, 'groupdash.html', {'group': g, 'members': members, 'is_staff': staff, 'title': g.groupName})
 
 
 def CreateGroup(request):

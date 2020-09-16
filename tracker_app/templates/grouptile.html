@@ -1,15 +1,15 @@
 <div class="item group-outter group-size" style="position: relative; display: inline-block;">
     <div class=" group-inner group-size">
         {% if is_owner %}
-            <h3 class="tile-head" style="color: var(--accent3);">{{ group.groupName }}</h3>
+            <h3 class="tile-head" style="color: var(--accent3);">{{ member.group.groupName }}</h3>
         {% else %}
-            <h3 class="tile-head">{{ group.groupName }}</h3>
+            <h3 class="tile-head">{{ member.group.groupName }}</h3>
         {% endif %}
 
-        <p class="tile-desc">{{ group.unitCode }}</p>
+        <p class="tile-desc">{{ member.group.groupName }}</p>
     </div>
 
-    <a href="/dashboard/{{ group.pk }}/" style="cursor: pointer;">
+    <a href="/dashboard/{{ member.group.pk }}/" style="cursor: pointer;">
         <span class="group-span group-size"></span>
     </a>
 </div>

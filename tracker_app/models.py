@@ -5,9 +5,15 @@ from django.core.validators import int_list_validator
 
 # Create your models here.
 
+class Group(models.Model):
+    groupName = models.CharField(max_length = 30)
+    unitCode = models.CharField(max_length = 7)
+
 class GroupMember(models.Model):
     person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     roles = models.CharField(validators=[int_list_validator], max_length=10)
+
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
     
 
 class MemberEntry(models.Model):
@@ -22,10 +28,4 @@ class TaskCategory(models.Model):
     submittedBy = models.ForeignKey(MemberEntry, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
 
-
-class Group(models.Model):
-    groupName = models.CharField(max_length = 30)
-    unitCode = models.CharField(max_length = 7)
-
-    members = models.ManyToManyField(GroupMember)
-    tasks = models.ManyToManyField(TaskCategory)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
