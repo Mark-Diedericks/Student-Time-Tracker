@@ -65,7 +65,7 @@ def groupdash(request, group_id):
         return redirect('/dashboard/')
 
     else:                                      # Group was found, 
-        return render(request, 'groupdash.html', {'group': g, 'members': members, 'is_staff': staff, 'title': g.groupName, 'tasks' : models.TaskCategory.objects.all()})
+        return render(request, 'groupdash.html', {'group': g, 'members': members, 'is_staff': staff, 'title': g.groupName})
 
 
 def CreateGroup(request):
