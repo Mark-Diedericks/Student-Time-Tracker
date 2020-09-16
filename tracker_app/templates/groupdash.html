@@ -2,8 +2,40 @@
 
 {% block page_content %}
 
-{% for m in members %}
-    <p>{{ m.person.get_full_name }}</p>
-{% endfor %}
+<!--table to display memebers-->
+<table>
+        <tr>
+            <th>Name</th>
+            <th>Role/s</th>
+        </tr>
+    {% for m in members %}
+    <tr>
+        <td>{{ m.person.get_full_name }}</td>
+        <td>{{ m.roles }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<!--form to create new time/task logs
+    Decided to go with a different approach:
+
+    * user clicks a button (New Log) which takes them to logging a MemberEntry
+    * if the Taskcategory isnt available in the dropdown of the MemberEntry form they have the option of making a new one
+    * if they make a new one, this takes them to the TaskCategory form.
+
+    None of the above has been implemented and only the New Log button should belong in this template.
+    Kept this code around for reference when i go to make the above forms.
+
+<form method="POST"> {% csrf_token %}
+    <label for="hours">Hours</label><input type="number" id="hours" min="0.5" step="0.5">
+    <label for="task">Task</label><input type="text" id="task" list="tasks">
+        <datalist id="tasks">
+            {% for t in tasks %}
+            <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
+            {% endfor %}
+        </datalist>
+    <input type="submit">
+</form>
+-->
+
 
 {% endblock %}

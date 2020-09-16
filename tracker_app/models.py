@@ -21,7 +21,6 @@ class MemberEntry(models.Model):
     hoursSpent = models.IntegerField()
 
 
-
 class TaskCategory(models.Model):
     categoryName = models.CharField(max_length = 30)
     description = models.TextField()

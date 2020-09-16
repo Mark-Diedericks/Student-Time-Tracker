@@ -10,5 +10,6 @@ urlpatterns = [
 
     path('dashboard/', views.userdash, name='userdash'),
     path('dashboard/<int:group_id>/', views.groupdash, name='groupdash'),
+    path('dashboard/<int:group_id>/newMemberEntry', views.newMemberEntry, name='newMemberEntry'),
     path('creategroup/',views.CreateGroup,name='CreateGroup')
 ]

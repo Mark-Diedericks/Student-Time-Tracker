@@ -64,11 +64,28 @@ def groupdash(request, group_id):
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
 
-    else:                                       # Group was found, 
-        return render(request, 'groupdash.html', {'group': g, 'members': members, 'is_staff': staff, 'title': g.groupName})
+    else:                                      # Group was found, 
+        return render(request, 'groupdash.html', {'group': g, 'members': members, 'is_staff': staff, 'title': g.groupName, 'tasks' : models.TaskCategory.objects.all()})
 
 
 def CreateGroup(request):
     form = forms.GroupForm()
     context = {'form':form}
     return render(request,'creategroup.html',context)
+
+
+def newMemberEntry(request, group_id):
+    # need to authenticate that this was navigated to properly
+
+    # below has all been validated before this
+    staff = request.user.groups.filter(name = "Editors").exists()
+    g = models.Group.objects.get(pk=group_id)
+    members = list(models.GroupMember.objects.filter(group = g))
+
+    # handle http requests
+    if request.method == "POST":
+        x = models.MemberEntry(0, request.user, request.POST.get("hours"))
+        print(x)
+    return render(request, "newmemberentry.html", {'group': g, 'members': members, 'is_staff': staff, 'title': g.groupName, 'tasks' : models.TaskCategory.objects.all()})
+
+    
