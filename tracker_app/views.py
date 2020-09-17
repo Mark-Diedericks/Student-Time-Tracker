@@ -22,7 +22,7 @@ def index(request):
 
 
 ##### GROUP REG ######
-
+@login_required
 def CreateGroup(request):
     if request.method == 'POST':
         form = forms.GroupForm(request.POST)
@@ -35,10 +35,10 @@ def CreateGroup(request):
 
 
 ##### USER DASH ######
-
+@login_required
 def userdash(request):
-    if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
-        return redirect('/login/')
+    # if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
+    #     return redirect('/login/')
 
     # Check if user is staff, temp TODO
     staff = request.user.groups.filter(name = "Editors").exists()
@@ -59,10 +59,10 @@ def userdash(request):
 
 
 ##### GROUP DASH ######
-
+@login_required
 def groupdash(request, group_id, mem_id = -1):
-    if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
-        return redirect('/login/')
+    # if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
+    #     return redirect('/login/')
 
     # Check if user is staff, temp TODO
     staff = request.user.groups.filter(name = "Editors").exists()
@@ -141,10 +141,10 @@ def groupdash(request, group_id, mem_id = -1):
     return render(request, 'groupdash.html', {'group': g, 'members': members, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'title': g.groupName})
 
 
-
+@login_required
 def logtime(request, group, member):   
-    if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
-        return redirect('/login/')
+    # if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
+    #     return redirect('/login/')
 
     # If there is no POST data, show the normal groupdash
     if request.method != "POST":
@@ -174,7 +174,7 @@ def logtime(request, group, member):
 
 
 ##### GROUP CREATE ######
-
+@login_required
 def members_upload(request, group_id):
     template = "members_upload.html"
     promt = {
