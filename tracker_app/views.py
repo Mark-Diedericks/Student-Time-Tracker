@@ -15,17 +15,24 @@ def index(request):
         return redirect('/login/')          # We don't have a user, goto login
 
 
-
+##### USER REG ######
 
 def login(request):
     return render(request, 'trackerApp/login.html', {'title': 'Log Ins'})
 
-#Sign up 
 def signUp(request):
     return render(request, 'trackerApp/signUp.html', {'title': 'Sign Up'})
 
 
+##### GROUP REG ######
 
+def CreateGroup(request):
+    form = forms.GroupForm()
+    context = {'form':form}
+    return render(request,'creategroup.html',context)
+
+
+##### USER DASH ######
 
 def userdash(request):
     if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
@@ -47,31 +54,35 @@ def userdash(request):
         return render(request, 'userdash.html', {'members': mems, "is_staff": staff, 'title': ""})
 
 
+##### GROUP DASH ######
 
-
-def groupdash(request, group_id):
+def groupdash(request, group_id, mem_id = -1):
     if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
         return redirect('/login/')
 
     # Check if user is staff, temp TODO
     staff = request.user.groups.filter(name = "Editors").exists()
+    mem = None
 
     try:                                        # Attempt to get the group from the primary-key (id)
-        g = models.Group.objects.get(pk=group_id)
+        g = models.Group.objects.get(pk = group_id)
         members = list(models.GroupMember.objects.filter(group = g))
 
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
 
-    else:                                      # Group was found, 
-        return render(request, 'groupdash.html', {'group': g, 'members': members, 'is_staff': staff, 'title': g.groupName})
 
 
-def CreateGroup(request):
-    form = forms.GroupForm()
-    context = {'form':form}
-    return render(request,'creategroup.html',context)
+    try:                                        # Attempt to get the active user, if there is any
+        mem = models.GroupMember.objects.get(pk = mem_id)
+    except:                                     # Member does not exist, continue without any selection
+        print("Member does not exist ", mem_id)
+        mem = None
+
+    
+    return render(request, 'groupdash.html', {'group': g, 'members': members, 'active_member': mem, 'is_staff': staff, 'title': g.groupName})
+
 
 
 def newMemberEntry(request, group_id):

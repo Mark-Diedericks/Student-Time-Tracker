@@ -10,22 +10,21 @@ class Group(models.Model):
     unitCode = models.CharField(max_length = 7)
 
 class GroupMember(models.Model):
-    person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     roles = models.CharField(validators=[int_list_validator], max_length=10)
 
+    person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
-    
-
-class MemberEntry(models.Model):
-    groupMember = models.ForeignKey(GroupMember, on_delete=models.SET_NULL, null=True, blank=True)
-    hoursSpent = models.IntegerField()
-
 
 class TaskCategory(models.Model):
     categoryName = models.CharField(max_length = 30)
     description = models.TextField()
     submitted = models.BooleanField()
-    submittedBy = models.ForeignKey(MemberEntry, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
 
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
+
+class MemberEntry(models.Model):
+    hoursSpent = models.IntegerField()
+
+    groupMember = models.ForeignKey(GroupMember, on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey(TaskCategory, on_delete=models.SET_NULL, null=True, blank=True)

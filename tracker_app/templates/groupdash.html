@@ -2,7 +2,7 @@
 
 {% block page_content %}
 
-<!--table to display memebers (unstyled)-->
+<!--table to display members (unstyled)-->
 <table>
         <tr>
             <th>Name</th>
@@ -10,8 +10,13 @@
         </tr>
     {% for m in members %}
     <tr>
-        <td>{{ m.person.get_full_name }}</td>
-        <td>{{ m.roles }}</td>
+        {% if active_member == m %}     <!-- Indicate which group member is selected, temp TODO -->
+            <td style="font-style: italic;">{{ m.person.get_full_name }}</td>
+            <td style="font-style: italic;">{{ m.roles }}</td>
+        {% else %}
+            <td>{{ m.person.get_full_name }}</td>
+            <td>{{ m.roles }}</td>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>

@@ -9,7 +9,9 @@ urlpatterns = [
     # path('signup/', views.signUp, name='signup'),
 
     path('dashboard/', views.userdash, name='userdash'),
+    path('creategroup/',views.CreateGroup,name='CreateGroup'),
+    
     path('dashboard/<int:group_id>/', views.groupdash, name='groupdash'),
+    path('dashboard/<int:group_id>/<int:mem_id>/', views.groupdash, name='groupmemdash'),
     path('dashboard/<int:group_id>/newMemberEntry', views.newMemberEntry, name='newMemberEntry'),
-    path('creategroup/',views.CreateGroup,name='CreateGroup')
 ]
