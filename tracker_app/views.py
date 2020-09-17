@@ -28,8 +28,6 @@ def CreateGroup(request):
         form = forms.GroupForm(request.POST)
         if form.is_valid():
             group = form.save()
-            messages.success(request, f'Your group has been created!')
-            
             return redirect('/upload-csv/{}/'.format(group.id))
     else:
         form = forms.GroupForm()
@@ -183,7 +181,6 @@ def members_upload(request, group_id):
         'order': 'Order of csv should be roles, person, group'
     }
     
-    print(request.method)
     if request.method == "GET":
         return render(request, template, promt)
 
