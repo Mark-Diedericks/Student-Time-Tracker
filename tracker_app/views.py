@@ -5,6 +5,11 @@ from django.shortcuts import redirect, render, get_object_or_404
 from tracker_app import forms
 from tracker_app import models
 
+import csv, io
+from django.contrib import messages
+
+
+
 # Create your views here.
 def index(request):
     # https://docs.djangoproject.com/en/3.1/topics/auth/default/#auth-web-requests
@@ -159,5 +164,33 @@ def logtime(request, group, member):
 
     # Go back to group page
     return redirect("/dashboard/{}/{}".format(group.id, member.id))
+
+def members_upload(request):
+    template = "members_upload.html"
+    promt = {
+        'order': 'Order of csv should be roles, person, group'
+    }
+    
+    if request.method == "GET":
+        return render(request,template,promt)
+
+    csv_file = request.FILES['file']
+
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request,'This is not a csv file')
+    
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+    for column in csv.reader(io_string, delimiter=',',quotechar="|"):
+        _, created = Contact.objects.update_or_create(
+            roles = column[0],
+            person = column[1],
+            group = column[2]
+
+        )
+
+    context = {}
+    return render(request,template,context)
 
     

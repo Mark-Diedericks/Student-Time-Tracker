@@ -13,4 +13,5 @@ urlpatterns = [
     
     path('dashboard/<int:group_id>/', views.groupdash, name='groupdash'),
     path('dashboard/<int:group_id>/<int:mem_id>/', views.groupdash, name='groupmemdash'),
+    path('upload-csv/',views.members_upload,name="members_upload")
 ]
