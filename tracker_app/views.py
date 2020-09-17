@@ -67,52 +67,71 @@ def groupdash(request, group_id, mem_id = -1):
     try:                                        # Attempt to get the group from the primary-key (id)
         g = models.Group.objects.get(pk = group_id)
         members = list(models.GroupMember.objects.filter(group = g))
+        tasks = list(models.TaskCategory.objects.filter(group = g))
+
+
+        # TODO, temp, lock into one user.
+        if mem_id == -1:
+            for mem in members:
+                if mem.person == request.user:
+                    return redirect("/dashboard/{}/{}".format(group_id, mem.id))
 
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
 
 
+    totals = []
 
     try:                                        # Attempt to get the active user, if there is any
         mem = models.GroupMember.objects.get(pk = mem_id)
+
+        entries = models.MemberEntry.objects.filter(groupMember = mem)
+        for t in tasks:
+            val = 0
+
+            for ent in list(entries.filter(category = t)):
+                val += ent.hoursSpent
+            
+            totals.append(val)
+
     except:                                     # Member does not exist, continue without any selection
         print("Member does not exist ", mem_id)
         mem = None
 
+    if (request.method == "POST") and (g is not None) and (mem is not None):
+        return logtime(request, g, mem)
     
-    return render(request, 'groupdash.html', {'group': g, 'members': members, 'active_member': mem, 'is_staff': staff, 'title': g.groupName})
+    return render(request, 'groupdash.html', {'group': g, 'members': members, 'tasks': tasks, 'totals': totals, 'active_member': mem, 'is_staff': staff, 'title': g.groupName})
 
 
 
-def logtime(request, group_id, mem_id):   
+def logtime(request, group, member):   
     if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
         return redirect('/login/')
 
-    # below has all been validated before this
-    staff = request.user.groups.filter(name = "Editors").exists()
-    cat = None
-    mem = None
-    
-    try:                                        # Attempt to get the active user, if there is any
-        g = models.Group.objects.get(pk=group_id)
-        mem = models.GroupMember.objects.get(pk = mem_id)
-        cat = models.TaskCategory.objects.get(pk = request.POST['CAT_ID'])
-    except:                                     # Member does not exist, continue without any selection
-        print("Failed to get component ", group_id, mem_id, request.POST['CAT_ID'])
-        mem = None
-        return redirect("/dashboard/%d/%d".format(group_id, mem_id))
-    
     if request.method != "POST":
-        return redirect("/dashboard/%d/%d".format(group_id, mem_id))
+        return groupdash(request, group.id, member.id)
 
+    # Get POST data
+    cat = None
+    hours = 0
+    
+    try:           
+        cat = models.TaskCategory.objects.get(categoryName = request.POST['task'])
+        hours = request.POST['hours']
+    except:
+        print("Failed to get POST component", request.POST['hours'], request.POST['task'])
+        return redirect("/dashboard/{}/{}".format(group.id, member.id))
 
 
     # Create time entry and save it
-    entry = models.MemberEntry(hours = request.POST['hours'], groupMember = mem, category = cat)
+    entry = models.MemberEntry(hoursSpent = hours, groupMember = member, category = cat)
     entry.save()
 
+    print("Added time log for ", member.id, " with ", hours, " in category ", cat.categoryName)
+
     # Go back to group page
-    return redirect("/dashboard/%d/%d".format(group_id, mem_id))
+    return redirect("/dashboard/{}/{}".format(group.id, member.id))
 
     

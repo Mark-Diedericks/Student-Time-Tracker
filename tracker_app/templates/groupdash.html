@@ -3,16 +3,23 @@
 {% block page_content %}
 
 <!--table to display members (unstyled)-->
-<table>
+<table style="width: 80vh;">
         <tr>
             <th>Name</th>
             <th>Role/s</th>
+
+            {% for t in tasks %}
+                <th>{{ t.categoryName }}</th>
+            {% endfor %}
         </tr>
     {% for m in members %}
     <tr>
         {% if active_member == m %}     <!-- Indicate which group member is selected, temp TODO -->
             <td style="font-style: italic;">{{ m.person.get_full_name }}</td>
             <td style="font-style: italic;">{{ m.roles }}</td>
+            {% for t in totals %}
+                <th>{{ t }}</th>
+            {% endfor %}
         {% else %}
             <td>{{ m.person.get_full_name }}</td>
             <td>{{ m.roles }}</td>
@@ -30,19 +37,22 @@
     * if they make a new one, this takes them to the TaskCategory form.
 
     None of the above has been implemented and only the New Log button should belong in this template.
-    Kept this code around for reference when i go to make the above forms.
+    Kept this code around for reference when i go to make the above forms. -->
 
-<form method="POST"> {% csrf_token %}
-    <label for="hours">Hours</label><input type="number" id="hours" min="0.5" step="0.5">
-    <label for="task">Task</label><input type="text" id="task" list="tasks">
-        <datalist id="tasks">
-            {% for t in tasks %}
+<form method="POST" style="margin-top: 10vh;"> {% csrf_token %}
+    <label for="hours">Hours</label>
+    <input name="hours" type="number" id="hours" min="0.5" step="0.5">
+
+    <label for="task">Task</label>
+    <select name="task" id="task">
+        {% for t in tasks %}
             <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
-            {% endfor %}
-        </datalist>
+        {% endfor %}
+    </select>
+
     <input type="submit">
 </form>
--->
+
 
 
 {% endblock %}

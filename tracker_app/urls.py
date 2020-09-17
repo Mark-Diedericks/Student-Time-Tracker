@@ -13,5 +13,4 @@ urlpatterns = [
     
     path('dashboard/<int:group_id>/', views.groupdash, name='groupdash'),
     path('dashboard/<int:group_id>/<int:mem_id>/', views.groupdash, name='groupmemdash'),
-    path('dashboard/<int:group_id>/<int:mem_id>/logtime', views.logtime, name='logtime'),
 ]
