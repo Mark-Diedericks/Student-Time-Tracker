@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from tracker_app import forms
 from tracker_app import models
@@ -37,9 +38,6 @@ def CreateGroup(request):
 ##### USER DASH ######
 @login_required
 def userdash(request):
-    # if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
-    #     return redirect('/login/')
-
     # Check if user is staff, temp TODO
     staff = request.user.groups.filter(name = "Editors").exists()
 
@@ -61,9 +59,6 @@ def userdash(request):
 ##### GROUP DASH ######
 @login_required
 def groupdash(request, group_id, mem_id = -1):
-    # if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
-    #     return redirect('/login/')
-
     # Check if user is staff, temp TODO
     staff = request.user.groups.filter(name = "Editors").exists()
     mem = None
@@ -143,9 +138,6 @@ def groupdash(request, group_id, mem_id = -1):
 
 @login_required
 def logtime(request, group, member):   
-    # if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
-    #     return redirect('/login/')
-
     # If there is no POST data, show the normal groupdash
     if request.method != "POST":
         return groupdash(request, group.id, member.id)
