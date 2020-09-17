@@ -87,9 +87,16 @@ def groupdash(request, group_id, mem_id = -1):
     if (mem_id == -1) and (user_mem is not None):
         return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
 
+
+    if user_mem is not None:
+        owner = "0" in user_mem.roles
+    else:
+        owner = False
+
+
     # TODO, temp, ensure user can view stuff.
     if (user_mem is not None) and (mem_id != user_mem.id):
-        if (not "0" in user_mem.roles):
+        if (not owner):
             return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
 
     members = []
@@ -107,7 +114,7 @@ def groupdash(request, group_id, mem_id = -1):
                 for ent in list(entries.filter(category = t)):
                     val += ent.hoursSpent
 
-                if  (m == user_mem) or ("0" in user_mem.roles):
+                if  (m == user_mem) or (owner):
                     m_tot.append(val)
                 else:
                     m_tot.append(" ")
@@ -121,7 +128,7 @@ def groupdash(request, group_id, mem_id = -1):
     if (request.method == "POST") and (g is not None) and (mem is not None):
         return logtime(request, g, mem)
     
-    return render(request, 'groupdash.html', {'group': g, 'members': members, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'title': g.groupName})
+    return render(request, 'groupdash.html', {'group': g, 'members': members, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'title': g.groupName})
 
 
 
