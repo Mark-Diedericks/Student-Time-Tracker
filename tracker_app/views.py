@@ -35,6 +35,9 @@ def signUp(request):
 def CreateGroup(request):
     form = forms.GroupForm()
     return render(request,'creategroup.html', {'form': form})
+    #Redirects user to the csv page (Only uncomment when Group creation is done)
+    # response = redirect('members_upload')
+    # return response
 
 
 ##### USER DASH ######
@@ -233,6 +236,8 @@ def members_upload(request):
         )
 
     context = {}
-    return render(request,template,context)
+    # return render(request,template,context)
+    response = redirect('/dashboard/')
+    return response
 
     
