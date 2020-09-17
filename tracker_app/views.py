@@ -29,6 +29,14 @@ def CreateGroup(request):
     #Redirects user to the csv page (Only uncomment when Group creation is done)
     # response = redirect('members_upload')
     # return response
+    if request.method == 'POST':
+        form = forms.GroupForm(request.POST)
+        if form.is_valid():
+            group = form.save()
+            return redirect('/upload-csv/{}/'.format(group.id))
+    else:
+        form = forms.GroupForm()
+        return render(request,'creategroup.html', {'form': form})
 
 
 ##### USER DASH ######
@@ -177,6 +185,9 @@ def members_upload(request, group_id):
     promt = {
         'order': 'Order of csv should be roles, person, group'
     }
+    
+    if request.method == "GET":
+        return render(request, template, promt)
 
     # Attempt to get the group, group's members and group's tasks
     try:
