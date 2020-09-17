@@ -8,13 +8,14 @@
 
 <hr>
 
-<form action="" methods="post">
-{% csrf_token %}
-{{form}}
-<input type="submit">
 
-
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit">
 </form>
+
+
 <div class="navbar-nav">
     <a class="nav-item nav-link md-4" href="/dashboard/">Return Home</a>
 </div>
