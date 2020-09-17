@@ -15,10 +15,10 @@
     {% for m in members %}
     <tr>
         {% if active_member == m %}     <!-- Indicate which group member is selected, temp TODO -->
-            <td style="font-style: italic;">{{ m.person.get_full_name }}</td>
-            <td style="font-style: italic;">{{ m.roles }}</td>
+            <td class="selected-mem">{{ m.person.get_full_name }}</td>
+            <td>{{ m.roles }}</td>
             {% for t in totals %}
-                <th>{{ t }}</th>
+                <td>{{ t }}</td>
             {% endfor %}
         {% else %}
             <td>{{ m.person.get_full_name }}</td>
