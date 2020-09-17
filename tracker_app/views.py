@@ -21,15 +21,6 @@ def index(request):
         return redirect('/login/')          # We don't have a user, goto login
 
 
-##### USER REG ######
-
-def login(request):
-    return render(request, 'trackerApp/login.html', {'title': 'Log Ins'})
-
-def signUp(request):
-    return render(request, 'trackerApp/signUp.html', {'title': 'Sign Up'})
-
-
 ##### GROUP REG ######
 
 def CreateGroup(request):
