@@ -1,4 +1,5 @@
 from django.urls import reverse
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render, get_object_or_404
 
@@ -183,10 +184,33 @@ def members_upload(request):
     io_string = io.StringIO(data_set)
     next(io_string)
     for column in csv.reader(io_string, delimiter=',',quotechar="|"):
-        _, created = Contact.objects.update_or_create(
-            roles = column[0],
-            person = column[1],
-            group = column[2]
+        role_str = column[0].strip()
+        uname_str = column[1].strip()
+        fname_str = column[2].strip()
+        lname_str = column[3].strip()
+        gname_str = column[4].strip()
+
+        try:  
+            p = User.objects.get(username = uname_str)
+        except:         # If user does not exist, create it
+            names = uname_str.split(' ')
+            
+            p = User(username = uname_str, password = "abc123")     # TODO, defualt password
+            p.first_name = fname_str
+            p.last_name = lname_str
+            p.save()
+
+
+        try:
+            g = models.Group.objects.get(groupName = gname_str)
+        except:         # If group does not exist, continue onto next entry
+            print("Group does not exist ", gname_str)
+            continue
+
+        _, created = models.GroupMember.objects.update_or_create(
+            roles = role_str,
+            person = p,
+            group = g
 
         )
 

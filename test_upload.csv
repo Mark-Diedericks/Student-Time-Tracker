@@ -1,4 +1,4 @@
-roles, person, group
-leader, ABC, winkyface
-member, XYZ, smileyface
-supporter, ABC, angryface
+roles, person, fname, lname, group
+1, ABC, A, BC, Test Group 2
+1, XYZ, X, YZ, Test Group 2
+1, ABC, A, BC, Test Grouup 1
