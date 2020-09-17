@@ -24,11 +24,6 @@ def index(request):
 ##### GROUP REG ######
 
 def CreateGroup(request):
-    form = forms.GroupForm()
-    return render(request,'creategroup.html', {'form': form})
-    #Redirects user to the csv page (Only uncomment when Group creation is done)
-    # response = redirect('members_upload')
-    # return response
     if request.method == 'POST':
         form = forms.GroupForm(request.POST)
         if form.is_valid():
