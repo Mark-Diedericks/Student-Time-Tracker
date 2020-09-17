@@ -24,11 +24,16 @@ def index(request):
 ##### GROUP REG ######
 
 def CreateGroup(request):
-    form = forms.GroupForm()
-    return render(request,'creategroup.html', {'form': form})
-    #Redirects user to the csv page (Only uncomment when Group creation is done)
-    # response = redirect('members_upload')
-    # return response
+    if request.method == 'POST':
+        form = forms.GroupForm(request.POST)
+        if form.is_valid():
+            group = form.save()
+            messages.success(request, f'Your group has been created!')
+            
+            return redirect('/upload-csv/{}/'.format(group.id))
+    else:
+        form = forms.GroupForm()
+        return render(request,'creategroup.html', {'form': form})
 
 
 ##### USER DASH ######
@@ -177,22 +182,23 @@ def members_upload(request, group_id):
     promt = {
         'order': 'Order of csv should be roles, person, group'
     }
-
-    # Attempt to get the group, group's members and group's tasks
-    try:
-        g = models.Group.objects.get(pk = group_id)
-    except:
-        print("Could not get group ", group_id)
-        return redirect('/dashboard/')
     
+    print(request.method)
     if request.method == "GET":
-        return render(request,template,promt)
+        return render(request, template, promt)
 
     csv_file = request.FILES['file']
 
     if not csv_file.name.endswith('.csv'):
         messages.error(request,'This is not a csv file')
     
+    # Attempt to get the group, group's members and group's tasks
+    try:
+        g = models.Group.objects.get(pk = group_id)
+    except:
+        print("Could not get group ", group_id)
+        return redirect('/dashboard/')
+
     # Load dataset
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
