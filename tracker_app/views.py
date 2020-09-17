@@ -34,8 +34,7 @@ def signUp(request):
 
 def CreateGroup(request):
     form = forms.GroupForm()
-    context = {'form':form}
-    return render(request,'creategroup.html',context)
+    return render(request,'creategroup.html', {'form': form})
 
 
 ##### USER DASH ######
@@ -49,7 +48,9 @@ def userdash(request):
 
     try:
         all_members = list(models.GroupMember.objects.all())    # Get all members
-        mems = []                                         # For normal users (tutor/student), display their groups
+        mems = []                                               # For normal users (tutor/student), display their groups
+
+        # (GroupMember, is_owner) array of all GroupMembers associated with user
         for mem in all_members:
             if mem.person == request.user:
                 mems.append((mem, "0" in mem.roles))
@@ -73,12 +74,14 @@ def groupdash(request, group_id, mem_id = -1):
     members = []
 
 
-    try:                                        # Attempt to get the group from the primary-key (id)
+    # Attempt to get the group, group's members and group's tasks
+    try:
         g = models.Group.objects.get(pk = group_id)
         mems = list(models.GroupMember.objects.filter(group = g))
         tasks = list(models.TaskCategory.objects.filter(group = g))
 
 
+        # Identify the GroupMember associated witht he User
         for mem in mems:
             if mem.person == request.user:
                 user_mem = mem
@@ -89,32 +92,34 @@ def groupdash(request, group_id, mem_id = -1):
         return redirect('/dashboard/')
 
 
-    # TODO, temp, lock into one user.
+    # TODO, lock into one user.
     if (mem_id == -1) and (user_mem is not None):
         return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
 
-
+    # Determine if the user is an 'owner' of the group
     if user_mem is not None:
         owner = "0" in user_mem.roles
     else:
         owner = False
 
 
-    # TODO, temp, ensure user can view stuff.
+    # TODO, ensure user can view stuff.
     if (user_mem is not None) and (mem_id != user_mem.id):
         if (not owner):
             return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
 
     members = []
 
-    try:                                        # Attempt to get the active user, if there is any
+    try:                                        
+        # Get the GroupMember of the select user
         mem = models.GroupMember.objects.filter(group = g).get(pk = mem_id)
-
-
         
+        # For each GroupMember, select calculate their total times for each task category and produce the member array
         for m in mems:
             m_tot = []
             entries = models.MemberEntry.objects.filter(groupMember = m)
+
+            # Calculate total time for each task
             for t in tasks:
                 val = 0
                 for ent in list(entries.filter(category = t)):
@@ -125,12 +130,14 @@ def groupdash(request, group_id, mem_id = -1):
                 else:
                     m_tot.append(" ")
 
+            # Append total task times, associated with member
             members.append((m, m_tot))
 
     except:                                     # Member does not exist, continue without any selection
         print("Member does not exist ", mem_id)
         return redirect("/dashboard/{}/".format(group_id))
 
+    # If there is POST data, it is a logtime request. Handle logging.
     if (request.method == "POST") and (g is not None) and (mem is not None):
         return logtime(request, g, mem)
     
@@ -142,6 +149,7 @@ def logtime(request, group, member):
     if (request.user is None) or (not request.user.is_authenticated):       # Always ensure we have a user
         return redirect('/login/')
 
+    # If there is no POST data, show the normal groupdash
     if request.method != "POST":
         return groupdash(request, group.id, member.id)
 
@@ -149,6 +157,7 @@ def logtime(request, group, member):
     cat = None
     hours = 0
     
+    # Attempt to get the task category from the given name, for the current group
     try:           
         cat = models.TaskCategory.objects.filter(group = group).get(categoryName = request.POST['task'])
         hours = request.POST['hours']
@@ -166,6 +175,9 @@ def logtime(request, group, member):
     # Go back to group page
     return redirect("/dashboard/{}/{}".format(group.id, member.id))
 
+
+##### GROUP CREATE ######
+
 def members_upload(request):
     template = "members_upload.html"
     promt = {
@@ -180,33 +192,39 @@ def members_upload(request):
     if not csv_file.name.endswith('.csv'):
         messages.error(request,'This is not a csv file')
     
+    # Load dataset
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    for column in csv.reader(io_string, delimiter=',',quotechar="|"):
-        role_str = column[0].strip()
-        uname_str = column[1].strip()
-        fname_str = column[2].strip()
-        lname_str = column[3].strip()
-        gname_str = column[4].strip()
 
+    # Each row correseponds to a user. Attempt to add that user to the corresponding group
+    for row in csv.reader(io_string, delimiter=',',quotechar="|"):
+        role_str = row[0].strip()
+        uname_str = row[1].strip()
+        fname_str = row[2].strip()
+        lname_str = row[3].strip()
+        gname_str = row[4].strip()
+
+        # Attempt to get User object from given username
         try:  
             p = User.objects.get(username = uname_str)
         except:         # If user does not exist, create it
             names = uname_str.split(' ')
             
+            # Create a new user with default password
             p = User(username = uname_str, password = "abc123")     # TODO, defualt password
             p.first_name = fname_str
             p.last_name = lname_str
             p.save()
 
-
+        # Attempt to get Group object from given groupName
         try:
             g = models.Group.objects.get(groupName = gname_str)
         except:         # If group does not exist, continue onto next entry
             print("Group does not exist ", gname_str)
             continue
 
+        # Create the new GroupMember model the user
         _, created = models.GroupMember.objects.update_or_create(
             roles = role_str,
             person = p,
