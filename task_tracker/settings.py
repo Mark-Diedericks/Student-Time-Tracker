@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'tracker_app.apps.TrackerAppConfig',
     'users.apps.UsersConfig',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -123,3 +124,9 @@ STATIC_URL = '/tracker_app/static/'
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#Redirects user to dashboard after login
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_URL = 'login'
