@@ -2,5 +2,5 @@ roles, person, fname, lname
 1, ABC, A, BC
 1, XYZ, X, YZ
 1, ABC, A, BC
-1,testTutor,Tutor,Test
-0,testStudent,Student,Test
+0,testTutor,Tutor,Test
+1,testStudent,Student,Test
