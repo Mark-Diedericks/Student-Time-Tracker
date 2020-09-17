@@ -26,7 +26,7 @@ urlpatterns = [
     path('register/', users_views.register, name='register'),
     path('', include('tracker_app.urls')),
     path('dashboard/', appView.userdash, name='userdash'),
-    path('creategroup/',users_views.CreateGroup)
+    path('creategroup/',appView.CreateGroup),
 
     path('profile/', users_views.profile, name='profile'),
     path('login/', auth_views.LoginView.as_view(template_name= 'users/login.html' ), name='login'),
