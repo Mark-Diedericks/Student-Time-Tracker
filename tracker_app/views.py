@@ -64,18 +64,20 @@ def groupdash(request, group_id, mem_id = -1):
     staff = request.user.groups.filter(name = "Editors").exists()
     mem = None
     user_mem = None
+    members = []
 
 
     try:                                        # Attempt to get the group from the primary-key (id)
         g = models.Group.objects.get(pk = group_id)
-        members = list(models.GroupMember.objects.filter(group = g))
+        mems = list(models.GroupMember.objects.filter(group = g))
         tasks = list(models.TaskCategory.objects.filter(group = g))
 
 
-        for mem in members:
+        for mem in mems:
             if mem.person == request.user:
                 user_mem = mem
                 break
+
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
@@ -90,20 +92,27 @@ def groupdash(request, group_id, mem_id = -1):
         if (not "0" in user_mem.roles):
             return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
 
-    totals = []
+    members = []
 
     try:                                        # Attempt to get the active user, if there is any
         mem = models.GroupMember.objects.filter(group = g).get(pk = mem_id)
 
 
-        entries = models.MemberEntry.objects.filter(groupMember = mem)
-        for t in tasks:
-            val = 0
+        
+        for m in mems:
+            m_tot = []
+            entries = models.MemberEntry.objects.filter(groupMember = m)
+            for t in tasks:
+                val = 0
+                for ent in list(entries.filter(category = t)):
+                    val += ent.hoursSpent
 
-            for ent in list(entries.filter(category = t)):
-                val += ent.hoursSpent
-            
-            totals.append(val)
+                if  (m == user_mem) or ("0" in user_mem.roles):
+                    m_tot.append(val)
+                else:
+                    m_tot.append(" ")
+
+            members.append((m, m_tot))
 
     except:                                     # Member does not exist, continue without any selection
         print("Member does not exist ", mem_id)
@@ -112,7 +121,7 @@ def groupdash(request, group_id, mem_id = -1):
     if (request.method == "POST") and (g is not None) and (mem is not None):
         return logtime(request, g, mem)
     
-    return render(request, 'groupdash.html', {'group': g, 'members': members, 'tasks': tasks, 'totals': totals, 'active_member': mem, 'is_staff': staff, 'title': g.groupName})
+    return render(request, 'groupdash.html', {'group': g, 'members': members, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'title': g.groupName})
 
 
 

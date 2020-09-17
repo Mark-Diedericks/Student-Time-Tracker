@@ -14,20 +14,19 @@
             {% endfor %}
         </tr>
     {% for m in members %}
-    <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.pk }}/';">
+    <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.0.pk }}/';">
         
-        {% if active_member == m %}     <!-- Indicate which group member is selected, temp TODO -->
-            <td class="selected-mem">{{ m.person.get_full_name }}</td>
-            <td>{{ m.roles }}</td>
-            {% for t in totals %}
-                <td>{{ t }}</td>
-            {% endfor %}
+        {% if active_member == m.0 %}     <!-- Indicate which group member is selected, temp TODO -->
+            <td class="selected-mem">{{ m.0.person.get_full_name }}</td>
+            <td>{{ m.0.roles }}</td>
         {% else %}
-            <td>{{ m.person.get_full_name }}</td>
-            <td>{{ m.roles }}</td>
-            <td></td>
-            <td></td>
+            <td>{{ m.0.person.get_full_name }}</td>
+            <td>{{ m.0.roles }}</td>
         {% endif %}
+
+        {% for t in m.1 %}
+            <td>{{ t }}</td>
+        {% endfor %}
         <!--dakgnojabsentjh-->
     </tr>
     
