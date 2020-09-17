@@ -63,6 +63,8 @@ def groupdash(request, group_id, mem_id = -1):
     # Check if user is staff, temp TODO
     staff = request.user.groups.filter(name = "Editors").exists()
     mem = None
+    user_mem = None
+
 
     try:                                        # Attempt to get the group from the primary-key (id)
         g = models.Group.objects.get(pk = group_id)
@@ -70,21 +72,29 @@ def groupdash(request, group_id, mem_id = -1):
         tasks = list(models.TaskCategory.objects.filter(group = g))
 
 
-        # TODO, temp, lock into one user.
-        if mem_id == -1:
-            for mem in members:
-                if mem.person == request.user:
-                    return redirect("/dashboard/{}/{}".format(group_id, mem.id))
-
+        for mem in members:
+            if mem.person == request.user:
+                user_mem = mem
+                break
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
 
 
+    # TODO, temp, lock into one user.
+    if (mem_id == -1) and (user_mem is not None):
+        return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
+
+    # TODO, temp, ensure user can view stuff.
+    if (user_mem is not None) and (mem_id != user_mem.id):
+        if (not "0" in user_mem.roles):
+            return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
+
     totals = []
 
     try:                                        # Attempt to get the active user, if there is any
-        mem = models.GroupMember.objects.get(pk = mem_id)
+        mem = models.GroupMember.objects.filter(group = g).get(pk = mem_id)
+
 
         entries = models.MemberEntry.objects.filter(groupMember = mem)
         for t in tasks:
@@ -97,7 +107,7 @@ def groupdash(request, group_id, mem_id = -1):
 
     except:                                     # Member does not exist, continue without any selection
         print("Member does not exist ", mem_id)
-        mem = None
+        return redirect("/dashboard/{}/".format(group_id))
 
     if (request.method == "POST") and (g is not None) and (mem is not None):
         return logtime(request, g, mem)
