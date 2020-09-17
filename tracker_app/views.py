@@ -128,7 +128,7 @@ def logtime(request, group, member):
     hours = 0
     
     try:           
-        cat = models.TaskCategory.objects.get(categoryName = request.POST['task'])
+        cat = models.TaskCategory.objects.filter(group = group).get(categoryName = request.POST['task'])
         hours = request.POST['hours']
     except:
         print("Failed to get POST component", request.POST['hours'], request.POST['task'])
