@@ -2,3 +2,5 @@ roles, person, fname, lname, group
 1, ABC, A, BC, Test Group 2
 1, XYZ, X, YZ, Test Group 2
 1, ABC, A, BC, Test Grouup 1
+1,testTutor,Tutor,Test,Test Group 3
+0,testStudent,Student,Test,Test Group 3
