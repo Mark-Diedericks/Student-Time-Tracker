@@ -1,6 +1,6 @@
-roles, person, fname, lname, group
-1, ABC, A, BC, Test Group 2
-1, XYZ, X, YZ, Test Group 2
-1, ABC, A, BC, Test Grouup 1
-1,testTutor,Tutor,Test,Test Group 3
-0,testStudent,Student,Test,Test Group 3
+roles, person, fname, lname
+1, ABC, A, BC
+1, XYZ, X, YZ
+1, ABC, A, BC
+1,testTutor,Tutor,Test
+0,testStudent,Student,Test

@@ -172,11 +172,18 @@ def logtime(request, group, member):
 
 ##### GROUP CREATE ######
 
-def members_upload(request):
+def members_upload(request, group_id):
     template = "members_upload.html"
     promt = {
         'order': 'Order of csv should be roles, person, group'
     }
+
+    # Attempt to get the group, group's members and group's tasks
+    try:
+        g = models.Group.objects.get(pk = group_id)
+    except:
+        print("Could not get group ", group_id)
+        return redirect('/dashboard/')
     
     if request.method == "GET":
         return render(request,template,promt)
@@ -197,7 +204,6 @@ def members_upload(request):
         uname_str = row[1].strip()
         fname_str = row[2].strip()
         lname_str = row[3].strip()
-        gname_str = row[4].strip()
 
         # Attempt to get User object from given username
         try:  
@@ -210,13 +216,6 @@ def members_upload(request):
             p.first_name = fname_str
             p.last_name = lname_str
             p.save()
-
-        # Attempt to get Group object from given groupName
-        try:
-            g = models.Group.objects.get(groupName = gname_str)
-        except:         # If group does not exist, continue onto next entry
-            print("Group does not exist ", gname_str)
-            continue
 
         # Create the new GroupMember model the user
         _, created = models.GroupMember.objects.update_or_create(
