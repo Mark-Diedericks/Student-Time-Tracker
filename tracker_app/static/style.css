@@ -2,6 +2,7 @@
     --background0: #f5f4f4;
     --background1: #fcfbfb;
     --background2: #ffffff;
+    --background3: #d5d4d4;
 
     --accent0: #0e1519;
     --accent1: #32312c;
@@ -134,11 +135,11 @@ body {
 th, td {
        padding: 15px;
        text-align: left;
-       border-bottom: 1px solid #ddd
+       border-bottom: 1px solid var(--background3)
 }
    
 tr:hover {
-       background-color: #f5f5f5;
+       background-color: var(--background0);
 }
    
 th {
