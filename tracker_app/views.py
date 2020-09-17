@@ -226,7 +226,6 @@ def members_upload(request, group_id):
         )
 
     context = {}
-    # return render(request,template,context)
     response = redirect('/dashboard/')
     return response
 
