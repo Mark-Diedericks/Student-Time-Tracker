@@ -23,6 +23,5 @@ from tracker_app import views as appView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('tracker_app.urls')),
-
     path('register/', users_views.register, name='register'),
 ]

@@ -1,6 +1,6 @@
 <div class="item group-outter group-size" style="position: relative; display: inline-block;">
     <div class=" group-inner group-size">
-        {% if group == "Group 1" %} <!-- Should check if user is the Admin of that group -->
+        {% if is_owner %} <!-- Should check if user is the Admin of that group -->
             <h3 class="tile-head" style="color: var(--accent3);">{{ group.groupName }}</h3>
         {% else %}
             <h3 class="tile-head">{{ group.groupName }}</h3>
