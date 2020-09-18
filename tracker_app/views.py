@@ -227,4 +227,25 @@ def members_upload(request, group_id):
     response = redirect('/dashboard/')
     return response
 
-    
+@login_required
+def add_members(request, group_id):
+    template = "add_members.html"
+
+    if request.method == "GET":
+        return render(request, template,"Add members")
+
+    # Attempt to get the group, group's members and group's tasks
+    try:
+        g = models.Group.objects.get(pk = group_id)
+    except:
+        print("Could not get group ", group_id)
+        return redirect('/dashboard/')
+
+    if request.method == 'POST':
+        form = forms.GroupMemberForm(request.POST)
+        if form.is_valid():
+            groupMember = form.save()
+            return redirect('/add_members/{}/'.format(groupMember.id))
+    else:
+        form = forms.GroupForm()
+        return render(request,'add_members.html', {'form': form})    

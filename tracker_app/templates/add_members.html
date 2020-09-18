@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+   
+</head>
+
+<h1> Add Members</h1>
+
+<hr>
+
+
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit">
+</form>
+
+
+<div class="navbar-nav">
+    <a class="nav-item nav-link md-4" href="/dashboard/">Return Home</a>
+</div>
+
+</html>
