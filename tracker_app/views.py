@@ -22,19 +22,6 @@ def index(request):
         return redirect('/login/')          # We don't have a user, goto login
 
 
-##### GROUP REG ######
-@login_required
-def CreateGroup(request):
-    if request.method == 'POST':
-        form = forms.GroupForm(request.POST)
-        if form.is_valid():
-            group = form.save()
-            return redirect('/upload-csv/{}/'.format(group.id))
-    else:
-        form = forms.GroupForm()
-        return render(request,'creategroup.html', {'form': form})
-
-
 ##### USER DASH ######
 @login_required
 def userdash(request):
@@ -166,86 +153,79 @@ def logtime(request, group, member):
 
 
 ##### GROUP CREATE ######
-@login_required
-def members_upload(request, group_id):
-    template = "members_upload.html"
-    promt = {
-        'order': 'Order of csv should be roles, person, group'
-    }
-    
-    if request.method == "GET":
-        return render(request, template, promt)
-
-    # Attempt to get the group, group's members and group's tasks
-    try:
-        g = models.Group.objects.get(pk = group_id)
-    except:
-        print("Could not get group ", group_id)
-        return redirect('/dashboard/')
-    
-    if request.method == "GET":
-        return render(request,template,promt)
-
-    csv_file = request.FILES['file']
-
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request,'This is not a csv file')
-    
-    # Load dataset
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-
-    # Each row correseponds to a user. Attempt to add that user to the corresponding group
-    for row in csv.reader(io_string, delimiter=',',quotechar="|"):
-        role_str = row[0].strip()
-        uname_str = row[1].strip()
-        fname_str = row[2].strip()
-        lname_str = row[3].strip()
-
-        # Attempt to get User object from given username
-        try:  
-            p = User.objects.get(username = uname_str)
-        except:         # If user does not exist, create it
-            names = uname_str.split(' ')
-            
-            # Create a new user with default password
-            p = User(username = uname_str, password = "abc123")     # TODO, defualt password
-            p.first_name = fname_str
-            p.last_name = lname_str
-            p.save()
-
-        # Create the new GroupMember model the user
-        _, created = models.GroupMember.objects.update_or_create(
-            roles = role_str,
-            person = p,
-            group = g
-
-        )
-
-    context = {}
-    response = redirect('/dashboard/')
-    return response
 
 @login_required
-def add_members(request, group_id):
-    template = "add_members.html"
-
-    if request.method == "GET":
-        return render(request, template,"Add members")
-
-    # Attempt to get the group, group's members and group's tasks
-    try:
-        g = models.Group.objects.get(pk = group_id)
-    except:
-        print("Could not get group ", group_id)
-        return redirect('/dashboard/')
-
+def CreateGroup(request):
     if request.method == 'POST':
-        form = forms.GroupMemberForm(request.POST)
-        if form.is_valid():
-            groupMember = form.save()
-            return redirect('/add_members/{}/'.format(groupMember.id))
+        # Group info
+        gname = request.POST['groupName']
+        gcode = request.POST['unitCode']
+
+        # Members textbox
+        mem_text = request.POST['membersField']
+
+        # Members CSV upload
+        try:
+            mem_file = request.FILES['file']
+        except:
+            print('No file given')
+            mem_file = None
+
+        # Attempt to create the group
+        try:
+            g = models.Group(groupName = gname, unitCode = gcode)
+            g.save()
+        except:
+            print('Failed to create group', gname, gcode)
+            return redirect('/dashboard/')
+
+
+        entries = []
+        # Add entries from textbox
+        for line in mem_text.splitlines():
+            row = line.split(',')
+            if len(row) >= 4:
+                entries.append(row)
+
+        # Add entries from file
+        if mem_file is not None:
+            if mem_file.name.lower().endswith('.csv') or mem_file.name.lower().endswith('.txt'):
+                
+                data_set = mem_file.read().decode('UTF-8')
+                io_string = io.StringIO(data_set)
+                next(io_string)
+
+                # Each row correseponds to a user. Attempt to add that user to the corresponding group
+                for row in csv.reader(io_string, delimiter=',',quotechar="|"):
+                    if len(row) >= 4:
+                        entries.append(row)
+        
+        # Attempt to add all members, create new if not existing
+        for entry in entries:
+            role_str = entry[0].strip()
+            uname_str = entry[1].strip()
+            fname_str = entry[2].strip()
+            lname_str = entry[3].strip()
+
+            # Attempt to get User object from given username
+            try:  
+                p = User.objects.get(username = uname_str)
+            except:         # If user does not exist, create it
+                names = uname_str.split(' ')
+
+                # Create a new user with default password
+                p = User(username = uname_str, password = "abc123")     # TODO, defualt password
+                p.first_name = fname_str
+                p.last_name = lname_str
+                p.save()
+
+            # Create the new GroupMember model the user
+            mem = models.GroupMember(roles = role_str, person = p, group = g)
+            mem.save()
+
+        
+        return redirect("/dashboard/")
     else:
-        form = forms.GroupForm()
-        return render(request,'add_members.html', {'form': form})    
+        return render(request,'creategroup.html')
+
+

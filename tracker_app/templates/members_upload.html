@@ -1,25 +1,9 @@
-{% extends "base.html" %}
+{% csrf_token %}
+<div class="row  justify-content-center">
+    <p>Accepts comma separated files; in format (Role, Username, First Name, Last Name)</p>
+</div>
 
-{% block page_content %}
-
-
-{% if messages %}
-    {% for message in messages %}
-        <div>
-            <strong>{{messages|safe}}</strong>
-        </div>
-    {% endfor %}
-{% else %}
-{{order}}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+<div class="row  justify-content-center">
     <label>Upload a csv with a list of members</label>
-    <input type="file" name="file">
-    <p>Only accepts csv files</p>
-    <button type="submit">Upload</button>
-</form>
-{% endif %}
-
-
-
-{% endblock %}
+    <input type="file" name="file" style="margin-left: 4vh;">
+</div>

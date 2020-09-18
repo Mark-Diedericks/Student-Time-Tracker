@@ -3,32 +3,47 @@
 {% block page_content %}
 
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     <!--{% csrf_token %}
     {{ form }}-->
-    <div class="row  justify-content-center" style="">
-        <div class="col-6">
-            <div class="item" style="float: right; margin-top: 4vh;">
-                <label for="groupName">Group Name</label>
-                <input name="groupName" type="text" id="groupName" style="margin-left: 1vh;">
+    <div class="row  justify-content-center">
+        <div class="col-12">
+            <div class="row  justify-content-center" style="margin-top: 4vh;">
+                <label for="groupName" style="width: 10vh;">Group Name</label>
+                <input name="groupName" type="text" id="groupName" style="margin-left: 1vh;" maxlength="30">
             </div>
 
-            <div class="item" style="float: right; margin-top: 4vh;">
-                <label for="unitCode">Unit Code</label>
-                <input name="unitCode" type="text" id="unitCode" style="margin-left: 1vh;">
+            <div class="row  justify-content-center" style="margin-top: 4vh;">
+                <label for="unitCode" style="width: 10vh;">Unit Code</label>
+                <input name="unitCode" type="text" id="unitCode" style="margin-left: 1vh;" maxlength="7">
             </div>
 
-        </div>
+            <hr>
 
-        <div class="col-6">
+
+
+            <div class="item" style="margin-top: 4vh;">
+                {% include "add_members.html"%}
+            </div>
+
+            <hr>
             
+            <div class="item" style="margin-top: 4vh;">
+                {% include "members_upload.html"%}
+            </div>
+            
+
+            <hr>
+
+            <div class="row  justify-content-center" style="margin-top: 4vh;">
+                <input type="submit">
+            </div>
         </div>
     </div>
 
 
 
     <div class="row  justify-content-center" style="margin-top: 4vh;">
-        <input type="submit">
     </div>
 </form>
 

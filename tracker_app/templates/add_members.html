@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-   
-</head>
+{% csrf_token %}
 
-<h1> Add Members</h1>
-
-<hr>
-
-
-<form method="POST">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit">
-</form>
-
-
-<div class="navbar-nav">
-    <a class="nav-item nav-link md-4" href="/dashboard/">Return Home</a>
+<div class="row  justify-content-center">
+    <label for="membersField">Enter Members (Role, Username, First Name, Last Name)</label>
 </div>
 
-</html>
+<div class="row  justify-content-center">
+    <textarea name="membersField" id="membersField" style="margin-left: 1vh;" rows="16" cols="40" style="overflow-y: scroll; overflow-x: scroll;"></textarea>
+</div>
