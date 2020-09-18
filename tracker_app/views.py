@@ -29,11 +29,7 @@ def CreateGroup(request):
         form = forms.GroupForm(request.POST)
         if form.is_valid():
             group = form.save()
-            groupName = form.cleaned_data.get('groupName')
-            unitCode = form.cleaned_data.get('unitCode')
-            messages.success(request,'Group has been created!!')
-            #return redirect('/upload-csv/{}/'.format(group.id))
-            return redirect('/dashboard/')
+            return redirect('/upload-csv/{}/'.format(group.id))
     else:
         form = forms.GroupForm()
         return render(request,'creategroup.html', {'form': form})
