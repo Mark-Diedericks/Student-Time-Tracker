@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+
 {% if messages %}
     {% for message in messages %}
         <div>
@@ -14,3 +19,7 @@
     <button type="submit">Upload</button>
 </form>
 {% endif %}
+
+
+
+{% endblock %}

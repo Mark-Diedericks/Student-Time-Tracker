@@ -1,23 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-   
-</head>
+{% extends "base.html" %}
 
-<h1> Create a Group</h1>
-
-<hr>
+{% block page_content %}
 
 
 <form method="POST">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit">
+    <!--{% csrf_token %}
+    {{ form }}-->
+    <div class="row  justify-content-center" style="">
+        <div class="col-6">
+            <div class="item" style="float: right; margin-top: 4vh;">
+                <label for="groupName">Group Name</label>
+                <input name="groupName" type="text" id="groupName" style="margin-left: 1vh;">
+            </div>
+
+            <div class="item" style="float: right; margin-top: 4vh;">
+                <label for="unitCode">Unit Code</label>
+                <input name="unitCode" type="text" id="unitCode" style="margin-left: 1vh;">
+            </div>
+
+        </div>
+
+        <div class="col-6">
+            
+        </div>
+    </div>
+
+
+
+    <div class="row  justify-content-center" style="margin-top: 4vh;">
+        <input type="submit">
+    </div>
 </form>
 
 
-<div class="navbar-nav">
-    <a class="nav-item nav-link md-4" href="/dashboard/">Return Home</a>
-</div>
 
-</html>
+{% endblock %}
+
+
