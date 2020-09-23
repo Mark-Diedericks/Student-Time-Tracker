@@ -42,7 +42,7 @@ def groupdash(request, group_id, mem_id = -1):
 
     # TODO, lock into one user.
     if (mem_id == -1) and (user_mem is not None):
-        return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
+        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group_id, user_mem.id)))
 
     # Determine if the user is an 'owner' of the group
     if user_mem is not None:
@@ -54,7 +54,7 @@ def groupdash(request, group_id, mem_id = -1):
     # TODO, ensure user can view stuff.
     if (user_mem is not None) and (mem_id != user_mem.id):
         if (not owner):
-            return redirect("/dashboard/{}/{}".format(group_id, user_mem.id))
+            return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group_id, user_mem.id)))
 
     members = []
 
@@ -83,7 +83,7 @@ def groupdash(request, group_id, mem_id = -1):
 
     except:                                     # Member does not exist, continue without any selection
         print("Member does not exist ", mem_id)
-        return redirect("/dashboard/{}/".format(group_id))
+        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=(group_id)))
 
     # If there is POST data, it is a logtime request. Handle logging.
     if (request.method == "POST") and (g is not None) and (mem is not None):
@@ -107,7 +107,7 @@ def logtime(request, group, member):
         hours = request.POST['hours']
     except:
         print("Failed to get POST component", request.POST['hours'], request.POST['task'])
-        return redirect("/dashboard/{}/{}".format(group.id, member.id))
+        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
 
 
     # Create time entry and save it
@@ -117,4 +117,4 @@ def logtime(request, group, member):
     print("Added time log for ", member.id, " with ", hours, " in category ", cat.categoryName)
 
     # Go back to group page
-    return redirect("/dashboard/{}/{}".format(group.id, member.id))
+    return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
