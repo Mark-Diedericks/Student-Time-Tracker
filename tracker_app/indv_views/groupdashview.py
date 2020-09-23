@@ -48,13 +48,13 @@ def groupdash(request, group_id, mem_id = -1):
         print("Member does not exist ", mem_id)
         #return HttpResponseRedirect(reverse("tracker_app:groupdash", args=(group_id)))
     
-    members = utils.get_member_times(g, mems, tasks, user_mem)
+    weeks = utils.get_weeks_entries(g, mems, tasks, user_mem)
 
     # If there is POST data, it is a logtime request. Handle logging.
     if (request.method == "POST") and (g is not None) and (mem is not None):
         return logtime(request, g, mem)
     
-    return render(request, 'groupdash.html', {'group': g, 'members': members, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'title': g.groupName})
+    return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'title': g.groupName})
 
 
 def logtime(request, group, member):   

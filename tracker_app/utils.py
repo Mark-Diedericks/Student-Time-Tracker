@@ -1,5 +1,6 @@
 from datetime import datetime
 from datetime import timedelta
+from os import times
 
 from django.contrib.auth.models import User
 from tracker_app import models
@@ -12,7 +13,7 @@ class TimeStruct:
 
         self.x = 0
 
-def get_weeks_entries(group, entries, tasks):
+def get_weeks_entries(group, members, tasks, user_mem):
     sd = datetime.combine(group.created, datetime.min.time())
     ed = datetime.combine(datetime.today(), datetime.min.time())
 
@@ -27,35 +28,39 @@ def get_weeks_entries(group, entries, tasks):
         ss = date
         es = date + timedelta(days = 6)
 
-        ent = entries.filter(entered__range=[ss.strftime("%Y-%m-%d"), es.strftime("%Y-%m-%d")])
-        totals = []
-
-        # Calculate total time for each task
-        for t in tasks:
-            val = 0
-            for ent in list(entries.filter(category = t)):
-                val += ent.hoursSpent
-
-            totals.append(val)
-
-        weeks.append(("{} - {}".format(ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y")), totals))
+        weeks.append(("{} - {}".format(ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y")), get_times(ss, es, members, tasks, user_mem)))
         date += step
+
+    weeks.append(("All Time", get_times(sd, ed, members, tasks, user_mem)))
 
     return weeks
 
-
-def get_member_times(group, members, tasks, user_mem):   
+def get_times(start, end, members, tasks, user_mem):
     times = []
 
-    # For each GroupMember, select calculate their total times for each task category and produce the member array
     for m in members:
         entries = models.MemberEntry.objects.filter(groupMember = m)
-        week_entries = get_weeks_entries(group, entries, tasks)
+        ent = entries.filter(entered__range=[start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")])
+
+        should_show = (m ==  user_mem) or is_owner(user_mem)
 
         # Append total task times, associated with member
-        times.append((m, week_entries))
+        times.append((m, get_totals(ent, tasks, should_show)))
 
     return times
+
+
+def get_totals(entries, tasks, should_show):
+    totals = []
+
+    # Calculate total time for each task
+    for t in tasks:
+        val = 0
+        for ent in list(entries.filter(category = t)):
+            val += ent.hoursSpent
+        totals.append(val)
+    
+    return totals
 
 
 
