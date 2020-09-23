@@ -1,0 +1,32 @@
+<table style="min-width: 40vh;">
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Role/s</th>
+
+            {% for t in tasks %}
+                <th>{{ t.categoryName }}</th>
+            {% endfor %}
+        </tr>
+
+    <!--{ for w in weeks }-->
+        {% for m in members %}
+        <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.0.pk }}/';">
+            
+            {% if active_member == m.0 %}     <!-- Indicate which group member is selected, temp TODO -->
+                <td class="selected-mem">{{ m.0.person.get_full_name }}</td>
+                <td>{{ m.0.roles }}</td>
+            {% else %}
+                <td>{{ m.0.person.get_full_name }}</td>
+                <td>{{ m.0.roles }}</td>
+            {% endif %}
+
+            {% for t in m.1 %}
+                <td>{{ t }}</td>
+            {% endfor %}
+        </tr>
+        
+        {% endfor %}
+    <!--{ endfor }-->
+</tbody>
+</table>

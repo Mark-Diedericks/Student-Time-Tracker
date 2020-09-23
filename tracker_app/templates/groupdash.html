@@ -2,42 +2,60 @@
 
 {% block page_content %}
 
-<!--table to display members (unstyled)-->
-<p>{{ weeks.0.0 }}</p> <!-- TODO -->
-
-<table style="min-width: 40vh;">
-    <tbody>
-        <tr>
-            <th>Name</th>
-            <th>Role/s</th>
-
-            {% for t in tasks %}
-                <th>{{ t.categoryName }}</th>
-            {% endfor %}
-        </tr>
-
-    <!--{% for w in weeks %}-->
-        {% for m in weeks.0.1 %}
-        <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.0.pk }}/';">
-            
-            {% if active_member == m.0 %}     <!-- Indicate which group member is selected, temp TODO -->
-                <td class="selected-mem">{{ m.0.person.get_full_name }}</td>
-                <td>{{ m.0.roles }}</td>
+<!-- https://getbootstrap.com/docs/4.0/components/carousel/ -->
+<div id="dateRangeCarousel" class="carousel slide" data-ride="carousel" data-interval="0"> 
+    <!-- Carousel Indicators -->
+    <ol class="carousel-indicators">
+        {% for w in weeks %}
+            {% if forloop.counter0 == 0 %}
+                <li data-target="#dateRangeCarousel" data-slide-to="{{ forloop.counter0 }}" class="active" style="filter: invert(100%);"></li>
             {% else %}
-                <td>{{ m.0.person.get_full_name }}</td>
-                <td>{{ m.0.roles }}</td>
+                <li data-target="#dateRangeCarousel" data-slide-to="{{ forloop.counter0 }}" style="filter: invert(100%);"></li>
             {% endif %}
-
-            {% for t in m.1 %}
-                <td>{{ t }}</td>
-            {% endfor %}
-        </tr>
-        
         {% endfor %}
-    <!--{% endfor %}-->
-</tbody>
-</table>
+    </ol>
 
+
+    <!-- Carousel Content -->
+    {% if not is_owner %}
+    <div class="carousel-inner" style="max-height: 72vh; min-height: 72vh; overflow-y: scroll; overflow-x: scroll; margin-top: 2vh;">
+    {% else %}
+    <div class="carousel-inner" style="max-height: 90vh; min-height: 90vh; overflow-y: scroll; overflow-x: scroll; margin-top: 2vh;">
+    {% endif %}
+
+        {% for w in weeks %}
+
+            {% if forloop.counter0 == 0 %}
+            <div class="carousel-item active">
+            {% else %}
+            <div class="carousel-item">
+            {% endif %}
+                
+                <!-- Date Range Heading -->
+                <div class="row justify-content-center" style="margin-bottom: 4vh;">
+                    <h4> {{ w.0 }} </h4>
+                </div>
+                
+                <!-- Date Range Content -->
+                <div class="row justify-content-center">
+                    {% include "timetable.html" with members=w.1 %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <!-- Next/Prev Buttons -->
+    <a class="carousel-control-prev" href="#dateRangeCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true" style="filter: invert(100%);"> </span>
+        <span class="sr-only">Previous</span>
+    </a>
+
+    <a class="carousel-control-next" href="#dateRangeCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true" style="filter: invert(100%);"> </span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
 
 <!--form to create new time/task logs
     Decided to go with a different approach:
@@ -48,22 +66,25 @@
 
     None of the above has been implemented and only the New Log button should belong in this template.
     Kept this code around for reference when i go to make the above forms. -->
-
+    
 {% if not is_owner %}
-<form method="POST" style="margin-top: 10vh;"> {% csrf_token %}
-    <label for="hours">Hours</label>
-    <input name="hours" type="number" id="hours" min="0.5" step="0.5">
+<hr>
 
-    <label for="task">Task</label>
-    <select name="task" id="task">
-        {% for t in tasks %}
-            <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
-        {% endfor %}
-    </select>
+<div class="row justify-content-center">
+    <form method="POST" style="margin-top: 10vh;"> {% csrf_token %}
+        <label for="hours">Hours</label>
+        <input name="hours" type="number" id="hours" min="0.5" step="0.5">
 
-    <input type="submit">
-</form>
+        <label for="task">Task</label>
+        <select name="task" id="task">
+            {% for t in tasks %}
+                <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit">
+    </form>
+</div>
 {% endif %}
-
 
 {% endblock %}

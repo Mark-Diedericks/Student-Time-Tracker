@@ -4,10 +4,10 @@
 
 
 {% if user.is_superuser %}
-    <a class = "ml-2" href="/creategroup/">Create Group</a>
+    <a class = "ml-2" href="/creategroup/" style="position: absolute; top: -3.8vh; left: 2vh;">Create Group</a>
 {% else %}
     {% if is_staff %}
-        <a class = "ml-2" href="/creategroup/">Create Group</a>
+        <a class = "ml-2" href="/creategroup/" style="position: absolute; top: -3.8vh; left: 2vh;">Create Group</a>
     {% endif %}
 {% endif %}
 
