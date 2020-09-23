@@ -10,6 +10,8 @@ from datetime import datetime
 class Group(models.Model):
     groupName = models.CharField(max_length = 30)
     unitCode = models.CharField(max_length = 7)
+    
+    created = models.DateField(default=datetime.today)
 
 class GroupMember(models.Model):
     roles = models.CharField(validators=[int_list_validator], max_length=10)
@@ -26,7 +28,7 @@ class TaskCategory(models.Model):
 
 class MemberEntry(models.Model):
     hoursSpent = models.IntegerField()
-    date = models.DateField(default=datetime.today)
+    entered = models.DateField(default=datetime.today)
 
     groupMember = models.ForeignKey(GroupMember, on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey(TaskCategory, on_delete=models.CASCADE, null=True, blank=True)

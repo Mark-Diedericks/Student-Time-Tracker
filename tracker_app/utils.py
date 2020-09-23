@@ -4,6 +4,12 @@ from tracker_app import models
 import csv, io
 
 
+class TimeStruct:
+
+    def __init__(self, member, ):
+
+        self.x = 0
+
 
 def is_staff(user):
     """
