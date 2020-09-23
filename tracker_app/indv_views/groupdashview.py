@@ -13,13 +13,12 @@ from django.contrib import messages
 
 
 ##### GROUP DASH ######
-def groupdash(request, group_id, mem_id = -1):
+def groupdash(request, group_id, mem_id):
 
     staff = utils.is_staff(request.user)
 
     mem = None
     user_mem = None
-    members = []
 
 
     # Attempt to get the group, group's members and group's tasks
@@ -31,22 +30,20 @@ def groupdash(request, group_id, mem_id = -1):
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
 
+    try:                                        
+        # Get the GroupMember of the select user
+        mem = models.GroupMember.objects.filter(group = g).get(pk = mem_id)
+    except:                                     # Member does not exist, continue without any selection
+        print("Member does not exist ", mem_id)
+
 
     # Get user member and check if the user is an 'owner' of the group
     user_mem = utils.get_user_member(mems, request.user)
     owner = utils.is_owner(user_mem)
 
     # TODO, ensure user can view stuff.
-    if (user_mem is not None) and (mem_id != user_mem.id) and (not owner):
-        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group_id, user_mem.id)))
-
-
-    try:                                        
-        # Get the GroupMember of the select user
-        mem = models.GroupMember.objects.filter(group = g).get(pk = mem_id)
-    except:                                     # Member does not exist, continue without any selection
-        print("Member does not exist ", mem_id)
-        #return HttpResponseRedirect(reverse("tracker_app:groupdash", args=(group_id)))
+    if (user_mem is not None) and (mem is not None) and (user_mem != mem) and (not owner):
+        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group_id]))
     
     weeks = utils.get_weeks_entries(g, mems, tasks, user_mem)
 
