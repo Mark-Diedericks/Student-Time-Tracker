@@ -27,63 +27,28 @@ def groupdash(request, group_id, mem_id = -1):
         g = models.Group.objects.get(pk = group_id)
         mems = list(models.GroupMember.objects.filter(group = g))
         tasks = list(models.TaskCategory.objects.filter(group = g))
-
-
-        # Identify the GroupMember associated witht he User
-        for mem in mems:
-            if mem.person == request.user:
-                user_mem = mem
-                break
-
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
 
 
-    # TODO, lock into one user.
-    if (mem_id == -1) and (user_mem is not None):
-        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group_id, user_mem.id)))
-
-    # Determine if the user is an 'owner' of the group
-    if user_mem is not None:
-        owner = "0" in user_mem.roles
-    else:
-        owner = False
-
+    # Get user member and check if the user is an 'owner' of the group
+    user_mem = utils.get_user_member(mems, request.user)
+    owner = utils.is_owner(user_mem)
 
     # TODO, ensure user can view stuff.
-    if (user_mem is not None) and (mem_id != user_mem.id):
-        if (not owner):
-            return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group_id, user_mem.id)))
+    if (user_mem is not None) and (mem_id != user_mem.id) and (not owner):
+        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group_id, user_mem.id)))
 
-    members = []
 
     try:                                        
         # Get the GroupMember of the select user
         mem = models.GroupMember.objects.filter(group = g).get(pk = mem_id)
-        
-        # For each GroupMember, select calculate their total times for each task category and produce the member array
-        for m in mems:
-            m_tot = []
-            entries = models.MemberEntry.objects.filter(groupMember = m)
-
-            # Calculate total time for each task
-            for t in tasks:
-                val = 0
-                for ent in list(entries.filter(category = t)):
-                    val += ent.hoursSpent
-
-                if  (m == user_mem) or (owner):
-                    m_tot.append(val)
-                else:
-                    m_tot.append(" ")
-
-            # Append total task times, associated with member
-            members.append((m, m_tot))
-
     except:                                     # Member does not exist, continue without any selection
         print("Member does not exist ", mem_id)
-        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=(group_id)))
+        #return HttpResponseRedirect(reverse("tracker_app:groupdash", args=(group_id)))
+    
+    members = utils.get_member_times(mems, tasks, user_mem)
 
     # If there is POST data, it is a logtime request. Handle logging.
     if (request.method == "POST") and (g is not None) and (mem is not None):

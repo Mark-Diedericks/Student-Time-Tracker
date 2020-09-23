@@ -14,6 +14,11 @@ from django.contrib import messages
 
 ##### GROUP CREATE ######
 def creategroup(request):
+    # Only staff can create groups
+    if not utils.is_staff(request.user):
+        return redirect("/dashboard/")
+
+
     if request.method == 'POST':
         # Group info
         gname = request.POST['groupName']

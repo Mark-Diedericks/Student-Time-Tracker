@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import int_list_validator
 
+from datetime import datetime
+
 
 # Create your models here.
 
@@ -19,12 +21,12 @@ class TaskCategory(models.Model):
     categoryName = models.CharField(max_length = 30)
     description = models.TextField()
     submitted = models.BooleanField()
-    date = models.DateField()
 
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
 
 class MemberEntry(models.Model):
     hoursSpent = models.IntegerField()
+    date = models.DateField(default=datetime.today)
 
     groupMember = models.ForeignKey(GroupMember, on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey(TaskCategory, on_delete=models.CASCADE, null=True, blank=True)
