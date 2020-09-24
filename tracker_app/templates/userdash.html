@@ -3,8 +3,15 @@
 {% block page_content %}
 
 
-{% if user.is_superuser %}
-    <a class = "ml-2" href="/creategroup/" style="position: absolute; top: -3.8vh; left: 2vh;">Create Group</a>
+{% if user.is_superuser %}                            
+<a type="button" class="btn btn-default btn-circle" style="background: var(--accent3); border-radius: 100px; display: flex; 
+                        position: absolute; bottom: 4%; right: 8%; width: 6vh; height: 6vh; font-size: larger; padding: 0vh; 
+                        align-items: center; box-shadow: 2px 2px 6px 0px #999999;" href="/creategroup/">
+
+        <i class="fa fa-plus" style="color: white; font-size: 150%; vertical-align: middle; width: 6vh;"></i>
+</a>
+    <!--<h1 style="color: var(--background0); display: block; position: relative; padding: 0vh; margin: 0vh;">+</h1>
+    <a class = "ml-2" href="/creategroup/" style="position: absolute; top: -3.8vh; left: 2vh;">Create Group</a>-->
 {% else %}
     {% if is_staff %}
         <a class = "ml-2" href="/creategroup/" style="position: absolute; top: -3.8vh; left: 2vh;">Create Group</a>

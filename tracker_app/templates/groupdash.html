@@ -67,9 +67,12 @@
     
 {% if not is_owner %}
 <hr>
+<div class="row justify-content-center">
+    <h5 style="color: var(--accent1); padding-bottom: 2vh;">Log Time</h5>
+</div>
 
 <div class="row justify-content-center">
-    <form method="POST" style="margin-top: 10vh;"> {% csrf_token %}
+    <form method="POST" > {% csrf_token %}
         <label for="hours">Hours</label>
         <input name="hours" type="number" id="hours" min="0.5" step="0.5">
 

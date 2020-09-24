@@ -74,8 +74,6 @@ def creategroup(request):
             try:  
                 p = User.objects.get(username = uname_str)
             except:         # If user does not exist, create it
-                names = uname_str.split(' ')
-
                 # Create a new user with default password
                 p = User(username = uname_str, password = utils.default_password())
                 p.first_name = fname_str

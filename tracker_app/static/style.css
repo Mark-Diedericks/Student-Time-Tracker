@@ -7,7 +7,7 @@
     --accent0: #0e1519;
     --accent1: #32312c;
     --accent2: #187FA6;
-    --accent3: #693464;
+    --accent3: #20796a; /*#693464;*/
     --accent4: #c61a26;
     --accent5: #45687b;
 }
@@ -47,12 +47,12 @@ body {
 .border-bottom {
     border-style: solid;
     border-width: 0px 0px 2px 0px;
-    border-color: var(--accent5);
+    border-color: var(--accent1);
 }
 
 .border-right {
     border-style: solid;
-    border-color: var(--accent5);
+    border-color: var(--accent1);
     border-width: 0px 2px 0px 0px;
 }
 
