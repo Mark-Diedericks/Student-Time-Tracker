@@ -44,4 +44,3 @@ def groupdash(request, group_id, mem_id = -1):
 def creategroup(request):
     return creategroupview.creategroup(request)
 
-

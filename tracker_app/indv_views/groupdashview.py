@@ -53,6 +53,18 @@ def groupdash(request, group_id, mem_id):
     
     return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'title': g.groupName})
 
+# def chart(request):
+#         g = models.Group.objects.get(pk = group_id)
+#         labels = list(models.GroupMember.objects.filter(group = g))
+#         data = []
+#         tasks = list(models.TaskCategory.objects.filter(group = g))
+#         #Needs to be changed
+#         i = 2
+#         for person in labels:
+#             data.append(i)
+#             i+=1
+#         # Go back to group page
+#         return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args={'labels': labels, 'data': data}))
 
 def logtime(request, group, member):   
     # If there is no POST data, show the normal groupdash
