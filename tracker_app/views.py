@@ -43,4 +43,3 @@ def groupdash(request, group_id, mem_id = -1):
 @login_required
 def creategroup(request):
     return creategroupview.creategroup(request)
-

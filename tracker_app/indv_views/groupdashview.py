@@ -66,6 +66,24 @@ def groupdash(request, group_id, mem_id):
 #         # Go back to group page
 #         return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args={'labels': labels, 'data': data}))
 
+def get_data(request, *args, **kwargs):
+    g = models.Group.objects.get(pk = group_id)
+    labels = list(models.GroupMember.objects.filter(group = g))
+    hours = []
+    #Needs to be changed
+    i = 2
+    for person in labels:
+        hours.append(i)
+        i+=1
+    data = {
+        "labels": labels,
+        "hours": hours,
+    }
+    return JsonResponse(data) #http response
+
+
+
+
 def logtime(request, group, member):   
     # If there is no POST data, show the normal groupdash
     if request.method != "POST":
