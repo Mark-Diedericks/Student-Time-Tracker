@@ -2,3 +2,5 @@
 /django_env/**
 /task_tracker/__pycache__/**
 /tracker_app/__pycache__/**
+/tracker_app/migration/__pycache__/**
+/tracker_app/indv_views/__pycache__/**
