@@ -36,9 +36,12 @@
                     <h4> {{ w.0 }} </h4>
                 </div>
 
-                <!-- Table -->
-                {% include "memberchart.html" with members=w.1 %}
-
+                <!-- Charts -->
+                {% if is_owner or user.is_superuser %}
+                    {% include "memberchart.html" with members=w.1 %}
+                {% endif %}
+                {% include "taskchart.html" with members=w.1 %}
+                
                 <!-- Date Range Content -->
                 {% include "timetable.html" with members=w.1 %}
             </div>
