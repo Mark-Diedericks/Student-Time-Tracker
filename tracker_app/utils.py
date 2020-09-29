@@ -58,7 +58,7 @@ def get_totals(entries, tasks, should_show):
         val = 0
         for ent in list(entries.filter(category = t)):
             val += ent.hoursSpent
-        totals.append(val)
+        totals.append((t.categoryName, val))
     
     return totals
 

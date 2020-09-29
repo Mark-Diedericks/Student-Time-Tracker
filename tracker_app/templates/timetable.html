@@ -24,7 +24,7 @@
                     {% endif %}
         
                     {% for t in m.1 %}
-                        <td>{{ t }}</td>
+                        <td>{{ t.1 }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -63,7 +63,7 @@
                         <td>{{ m.0.roles }}</td>
             
                         {% for t in m.1 %}
-                            <td>{{ t }}</td>
+                            <td>{{ t.1 }}</td>
                         {% endfor %}
                     </tr>
                 {% endif %}
