@@ -1,0 +1,39 @@
+
+<div class="row justify-content-center" style="padding-left: 14vh; padding-right: 14vh;">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <canvas id="taskchart{{forloop.counter0}}"></canvas>
+    <script>
+        chartdata = [];
+        chartlabels = [];
+        {% if active_member is None %}
+        12, 6
+        {% else %}
+            //display members times
+            {% for m in members %}
+                {% if m.0 == active_member %}
+                    {% for t in m.1 %}
+                        chartdata.push('{{ t.1 }}');
+                        chartlabels.push('{{ t.0 }}');
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        
+        new Chart(document.getElementById('taskchart{{forloop.counter0}}').getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: chartlabels,
+                datasets: [{
+                    label: 'Hours per task   {{w.0}}',
+                    data: chartdata,
+                    borderWidth: 1
+                }]
+            },
+            options: { 
+                responsive: true,
+                maintainAspectRatio: true,
+            }
+        });
+    </script>
+</div>
