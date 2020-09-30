@@ -6,7 +6,10 @@
         chartdata = [];
         chartlabels = [];
         {% if active_member is None %}
-        12, 6
+        chartdata.push(10);
+        chartdata.push(10);
+        chartlabels.push('test1');
+        chartlabels.push('test2');
         {% else %}
             //display members times
             {% for m in members %}
