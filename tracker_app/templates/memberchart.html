@@ -1,8 +1,9 @@
 {% if active_member is None %}
 
 <script>
-{% block jquery %}
-var endpoint = 'dashboard/<int:group_id>/<int:mem_id>/'
+// Causes a massive amount of unecessary redirects???? TODO
+/*{% block jquery %}
+var endpoint = '/dashboard/{{ group.pk }}/'
 
 $.ajax({
     method: "GET",
@@ -17,7 +18,7 @@ $.ajax({
 
 })
 
-{% endblock %}
+{% endblock %}*/
 </script>
 
     <div class="row justify-content-center" style="padding-left: 14vh; padding-right: 14vh;">
