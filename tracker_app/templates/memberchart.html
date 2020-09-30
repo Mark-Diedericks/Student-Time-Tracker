@@ -27,10 +27,15 @@ $.ajax({
             new Chart(document.getElementById('chart{{forloop.counter0}}').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: ['Bob', 'Rob', 'Ben', 'Lachie', 'Jack', 'Sam'],
+                    //labels: ['Bob', 'Rob', 'Ben', 'Lachie', 'Jack', 'Sam'],
+                    labels: [{% for m in members %}"{{m.prettyname}}",{% endfor %}], //Get people's name
+
                     datasets: [{
-                        label: 'Hours worked on project    {{w.0}}',
-                        data: [12, 19, 3, 5, 2, 3],
+                        label: 'Hours worked on project    {{ w.fullname }}',
+
+                        //data: [12, 19, 3, 5, 2, 3],
+                        data: [{% for m in members %}{{m.totaltime}},{% endfor %}], //Get people's total times (for time frame)
+
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',

@@ -6,12 +6,68 @@ from django.contrib.auth.models import User
 from tracker_app import models
 import csv, io
 
+ROLES_DICT = {"0": "Owner",
+            "1": "Leader",
+            "2": "Member",} ### TODO, add more roles
 
 class TimeStruct:
+    def __init__(self, sname, fname, sdate, edate, isat = False):
+        self.simplename = sname
+        self.fullname = fname
 
-    def __init__(self, member, ):
+        self.start = sdate
+        self.end = edate
 
-        self.x = 0
+        self.isalltime = isat
+
+        self.members = []
+        self.tasks = {}
+
+    def add_member(self, mem, tasks):
+        for t in tasks:
+            mem.add_task(t)
+
+            if not (t.taskname in self.tasks):
+                self.tasks[t.taskname] = 0
+            
+            self.tasks[t.taskname] += t.totaltime
+
+        self.members.append(mem)
+
+class MemberStruct:
+    def __init__(self, mem, vis):
+        self.member = mem
+        self.totaltime = 0
+        self.visible = vis
+
+        roles = []
+        for r in mem.roles.split(','):
+            if r in ROLES_DICT:
+                roles.append(ROLES_DICT[r])
+
+        self.prettyroles = ', '.join(roles)
+        self.prettyname = mem.person.get_full_name
+
+        self.tasks = []
+
+    def add_task(self, task):
+        self.tasks.append(task)
+        self.totaltime += task.totaltime
+
+
+class TaskStruct:
+    def __init__(self, task, entries):
+        self.taskObject = task
+        self.taskname = task.categoryName
+
+        self.taskEntries = entries
+        self.totaltime = 0
+
+        for ent in list(entries):
+            self.totaltime += ent.hoursSpent
+
+
+
 
 def get_weeks_entries(group, members, tasks, user_mem):
     sd = datetime.combine(group.created, datetime.min.time())
@@ -22,22 +78,36 @@ def get_weeks_entries(group, members, tasks, user_mem):
 
     date = start
     step = timedelta(days=7)
+    idx = 1
 
+    # Individual weeks
     weeks = []
     while (date <= end):
         ss = date
         es = date + timedelta(days = 6)
 
-        weeks.append(("{} - {}".format(ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y")), get_times(ss, es, members, tasks, user_mem)))
-        date += step
+        sname = "Week {}".format(idx)
+        fname = "{} - {}".format(ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y"))
 
-    weeks.append(("All Time", get_times(sd, ed, members, tasks, user_mem)))
+        s_time = TimeStruct(sname, fname, ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y"))
+        get_times(s_time, ss, es, members, tasks, user_mem)
+        weeks.append(s_time)
+        
+        date += step
+        idx += 1
+
+
+    # All time
+    sname = "All time"
+    fname = "{} - {}".format(sd.strftime("%d/%m/%Y"), ed.strftime("%d/%m/%Y"))
+
+    s_alltime = TimeStruct(sname, fname, sd.strftime("%d/%m/%Y"), ed.strftime("%d/%m/%Y"), True)
+    get_times(s_alltime, sd, ed, members, tasks, user_mem)
+    weeks.append(s_alltime)
 
     return weeks
 
-def get_times(start, end, members, tasks, user_mem):
-    times = []
-
+def get_times(s_time, start, end, members, tasks, user_mem):
     for m in members:
         entries = models.MemberEntry.objects.filter(groupMember = m)
         ent = entries.filter(entered__range=[start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")])
@@ -45,22 +115,20 @@ def get_times(start, end, members, tasks, user_mem):
         should_show = (m ==  user_mem) or is_owner(user_mem)
 
         # Append total task times, associated with member
-        times.append((m, get_totals(ent, tasks, should_show)))
+        s_mem = MemberStruct(m, should_show)
+        s_time.add_member(s_mem, get_totals(ent, tasks))
 
-    return times
 
 
-def get_totals(entries, tasks, should_show):
-    totals = []
+def get_totals(entries, tasks):
+    s_tasks = []
 
     # Calculate total time for each task
     for t in tasks:
-        val = 0
-        for ent in list(entries.filter(category = t)):
-            val += ent.hoursSpent
-        totals.append((t.categoryName, val))
-    
-    return totals
+        s_task = TaskStruct(t, entries.filter(category = t))
+        s_tasks.append(s_task)
+
+    return s_tasks
 
 
 

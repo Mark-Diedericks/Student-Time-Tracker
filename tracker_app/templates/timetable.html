@@ -13,18 +13,22 @@
                 </tr>
         
             {% for m in members %}
-                <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.0.pk }}/';">
+                <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.member.pk }}/';">
                     
-                    {% if active_member == m.0 %}     <!-- Indicate which group member is selected, temp TODO -->
-                        <td class="selected-mem">{{ m.0.person.get_full_name }}</td>
-                        <td>{{ m.0.roles }}</td>
+                    {% if active_member == m.member %}
+                        <td class="selected-mem">{{ m.prettyname }}</td>
+                        <td>{{ m.prettyroles }}</td>
                     {% else %}
-                        <td>{{ m.0.person.get_full_name }}</td>
-                        <td>{{ m.0.roles }}</td>
+                        <td>{{ m.prettyname }}</td>
+                        <td>{{ m.prettyroles }}</td>
                     {% endif %}
         
-                    {% for t in m.1 %}
-                        <td>{{ t.1 }}</td>
+                    {% for t in m.tasks %}
+                        {% if m.visible %}
+                            <td>{{ t.totaltime }}</td>
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -57,13 +61,14 @@
                     {% endfor %}
                 </tr>
             {% for m in members %}
-                {% if m.0 == active_member %}
-                    <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.0.pk }}/';">
-                        <td class="selected-mem">{{ m.0.person.get_full_name }}</td>
-                        <td>{{ m.0.roles }}</td>
+
+                {% if active_member == m.member %}
+                    <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.member.pk }}/';">
+                        <td class="selected-mem">{{ m.prettyname }}</td>
+                        <td>{{ m.prettyroles }}</td>
             
-                        {% for t in m.1 %}
-                            <td>{{ t.1 }}</td>
+                        {% for t in m.tasks %}
+                            <td>{{ t.totaltime }}</td>
                         {% endfor %}
                     </tr>
                 {% endif %}
