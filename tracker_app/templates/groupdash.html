@@ -38,8 +38,8 @@
 
                 <!-- Charts -->
                 {% if is_owner or user.is_superuser %}
-                    <!-- {% include "groupchart.html" with members=w.members %} -->
-                    <!-- {% include "groupTaskChart.html" with members=w.members %} -->
+                    {% include "groupchart.html" with members=w.members %}
+                    {% include "groupTaskChart.html" with members=w.members %}
                 {% endif %}
                 {% include "taskchart.html" with members=w.members %}
                 

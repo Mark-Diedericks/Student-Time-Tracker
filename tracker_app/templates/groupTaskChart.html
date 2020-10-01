@@ -2,9 +2,9 @@
 <div class="row justify-content-center" style="padding-left: 12vh; padding-right: 12vh;">
     <h3>Task Chart</h3>
 </div>
+
 <div class="row justify-content-center" style="padding-left: 12vh; padding-right: 12vh;">
     <select name="task" id="taskSelector" onchange="taskFunc()">
-        <option>Choose a task</option>
         {% for t in tasks %}
             <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
         {% endfor %}
@@ -15,15 +15,18 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <canvas id="pie{{forloop.counter0}}"></canvas>
         <script>
-            function taskFunc() {
-            x = document.getElementById("taskSelector").value;
+        function taskFunc() {
+            taskData = [{% for m in members %}{% for t in m.tasks %}{% if t.categoryName == x %}{{ t.totaltime }}{% endif %}{% endfor %}{% endfor %}]
+            var x = document.getElementById("taskSelector").value;
+            console.log(x)
+            console.log(taskData)
             new Chart(document.getElementById('pie{{forloop.counter0}}').getContext('2d'), {
                 type: 'pie',
                 data: {
                     labels: [{% for m in members %}"{{m.prettyname}}",{% endfor %}], //Get people's name
                     datasets: [{
                         label: 'Hours worked on project    {{ w.fullname }}',
-                        data: [[{% for m in members %}{{m.tasks.1.totaltime}},{% endfor %}]], //Get people's total times (for time frame)
+                        data: taskData, //Get people's total times (for time frame)
 
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -59,6 +62,5 @@
             }
             </script>
     </div>
-<h1>{{x}}</h1>
 
 {% endif %}
