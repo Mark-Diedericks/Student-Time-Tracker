@@ -1,26 +1,5 @@
 {% if active_member is None %}
 
-<script>
-// Causes a massive amount of unecessary redirects???? TODO
-/*{% block jquery %}
-var endpoint = '/dashboard/{{ group.pk }}/'
-
-$.ajax({
-    method: "GET",
-    url: endpoint,
-    sucess: function(data){
-        console.log(data)
-    },
-    error: function(error_data){
-        console.log("ERROR")
-        console.log(error_data)
-    }
-
-})
-
-{% endblock %}*/
-</script>
-
     <div class="row justify-content-center" style="padding-left: 14vh; padding-right: 14vh;">
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <canvas id="chart{{forloop.counter0}}"></canvas>
@@ -28,13 +7,9 @@ $.ajax({
             new Chart(document.getElementById('chart{{forloop.counter0}}').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    //labels: ['Bob', 'Rob', 'Ben', 'Lachie', 'Jack', 'Sam'],
                     labels: [{% for m in members %}"{{m.prettyname}}",{% endfor %}], //Get people's name
-
                     datasets: [{
                         label: 'Hours worked on project    {{ w.fullname }}',
-
-                        //data: [12, 19, 3, 5, 2, 3],
                         data: [{% for m in members %}{{m.totaltime}},{% endfor %}], //Get people's total times (for time frame)
 
                         backgroundColor: [
