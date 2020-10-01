@@ -4,7 +4,7 @@
 </div>
 
 <div class="row justify-content-center" style="padding-left: 12vh; padding-right: 12vh;">
-    <select name="task" id="taskSelector" onchange="taskFunc()">
+    <select name="task" id="taskSelector{{forloop.counter0}" onchange="taskFunc()">
         {% for t in tasks %}
             <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
         {% endfor %}
@@ -16,17 +16,13 @@
         <canvas id="pie{{forloop.counter0}}"></canvas>
         <script>
         function taskFunc() {
-            taskData = [{% for m in members %}{% for t in m.tasks %}{% if t.categoryName == x %}{{ t.totaltime }}{% endif %}{% endfor %}{% endfor %}]
-            var x = document.getElementById("taskSelector").value;
-            console.log(x)
-            console.log(taskData)
             new Chart(document.getElementById('pie{{forloop.counter0}}').getContext('2d'), {
                 type: 'pie',
                 data: {
                     labels: [{% for m in members %}"{{m.prettyname}}",{% endfor %}], //Get people's name
                     datasets: [{
                         label: 'Hours worked on project    {{ w.fullname }}',
-                        data: taskData, //Get people's total times (for time frame)
+                        data: getData(), //Get people's total times (for time frame)
 
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -59,6 +55,26 @@
                     }
                 }
             });
+            }
+            //Obtains the data for the given task
+            function getData(){
+                var x = document.getElementById("taskSelector{{forloop.counter0}").value;
+                console.log(x)
+                taskList = [{% for t in tasks %}"{{t.categoryName}}",{% endfor %}] //get Tasks
+                num = 0;
+                for (i = 0; i < taskList.length; i++) {
+                    if (x == taskList[i]){
+                        num = i;
+                    }
+                }
+                
+                taskHours = []
+                allMembers = [{% for m in members %}{% for t in m.tasks %}{{t.totaltime}},{% endfor %}{% endfor %}]
+                while (num < allMembers.length) {
+                    taskHours.push(allMembers[num])
+                    num += taskList.length
+                }
+                return taskHours
             }
             </script>
     </div>
