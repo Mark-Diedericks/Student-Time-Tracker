@@ -6,17 +6,30 @@
         chartdata = [];
         chartlabels = [];
         {% if active_member is None %}
-        chartdata.push(10);
-        chartdata.push(10);
-        chartlabels.push('test1');
-        chartlabels.push('test2');
+        // display task totals for all members
+        var dpoints = {
+            {% for t in tasks %}
+                "{{t.categoryName}}": 0,
+            {% endfor %}
+        }
+        {% for m in members %}
+        {% for t in m.tasks %}
+            // get the totals per task for everyone
+            dpoints["{{t.taskname}}"] += {{t.totaltime}};
+        {% endfor %}
+        {% endfor %}
+        for (key in dpoints) {
+            // make the dict into datapoints
+            chartlabels.push(key);
+            chartdata.push(dpoints[key]);
+        }
         {% else %}
             //display members times
             {% for m in members %}
-                {% if m.0 == active_member %}
-                    {% for t in m.1 %}
-                        chartdata.push('{{ t.1 }}');
-                        chartlabels.push('{{ t.0 }}');
+                {% if m.member == active_member %}
+                    {% for t in m.tasks %}
+                        chartdata.push({{ t.totaltime }});
+                        chartlabels.push("{{ t.taskname }}");
                     {% endfor %}
                 {% endif %}
             {% endfor %}
