@@ -2,10 +2,10 @@
 
     <div class="row justify-content-center" style="padding-left: 12vh; padding-right: 12vh;">
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-        <canvas id="chart{{forloop.counter0}}"></canvas>
+        <canvas id="pie{{forloop.counter0}}"></canvas>
         <script>
-            new Chart(document.getElementById('chart{{forloop.counter0}}').getContext('2d'), {
-                type: 'bar',
+            new Chart(document.getElementById('pie{{forloop.counter0}}').getContext('2d'), {
+                type: 'pie',
                 data: {
                     labels: [{% for m in members %}"{{m.prettyname}}",{% endfor %}], //Get people's name
                     datasets: [{
@@ -44,6 +44,12 @@
                 }
             });
             </script>
+             <label for="task">Task</label>
+             <select name="task" id="task">
+                 {% for t in tasks %}
+                     <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
+                 {% endfor %}
+             </select>
     </div>
 
 
