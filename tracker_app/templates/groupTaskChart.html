@@ -6,6 +6,7 @@
 
 <div class="row justify-content-center" style="padding-left: 12vh; padding-right: 12vh;">
     <select name="task" id="taskSelector{{forloop.counter0}}" onchange="taskFunc()">
+        <!-- <option>Choose a task</option> -->
         {% for t in tasks %}
             <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
         {% endfor %}
