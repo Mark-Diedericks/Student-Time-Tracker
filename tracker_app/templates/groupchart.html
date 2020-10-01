@@ -5,7 +5,7 @@
         <canvas id="chart{{forloop.counter0}}"></canvas>
         <script>
             new Chart(document.getElementById('chart{{forloop.counter0}}').getContext('2d'), {
-                type: 'pie',
+                type: 'bar',
                 data: {
                     labels: [{% for m in members %}"{{m.prettyname}}",{% endfor %}], //Get people's name
                     datasets: [{

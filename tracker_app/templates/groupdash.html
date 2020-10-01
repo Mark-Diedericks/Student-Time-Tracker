@@ -38,9 +38,9 @@
 
                 <!-- Charts -->
                 {% if is_owner or user.is_superuser %}
-                    {% include "memberchart.html" with members=w.members %}
+                    {% include "groupchart.html" with members=w.members %}
                 {% endif %}
-                {% include "taskchart.html" with members=w.members %}
+                <!-- {% include "taskchart.html" with members=w.members %} -->
                 
                 <!-- Date Range Content -->
                 {% include "timetable.html" with members=w.members %}
