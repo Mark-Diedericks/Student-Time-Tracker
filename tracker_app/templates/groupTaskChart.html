@@ -1,10 +1,10 @@
 {% if active_member is None %}
-<div class="row justify-content-center" style="padding-left: 12vh; padding-right: 12vh;">
+<div class="row justify-content-center" style="padding-left: 14vh; padding-right: 14vh; margin-bottom: 1vh;">
     <h3>Task Chart</h3>
 </div>
 
 
-<div class="row justify-content-center" style="padding-left: 12vh; padding-right: 12vh;">
+<div class="row justify-content-center" style="padding-left: 14vh; padding-right: 14vh; margin-bottom: 1vh;">
     <select name="task" id="taskSelector{{forloop.counter0}}" onchange="taskFunc()">
         <!-- <option>Choose a task</option> -->
         {% for t in tasks %}
@@ -13,7 +13,7 @@
     </select>
 </div>
 
-    <div class="row justify-content-center" style="padding-left: 12vh; padding-right: 12vh;">
+    <div class="row justify-content-center" style="padding-left: 14vh; padding-right: 14vh; margin-bottom: 12vh;">
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <canvas id="pie{{forloop.counter0}}"></canvas>
         <script>
@@ -51,10 +51,17 @@
                     scales: {
                         yAxes: [{
                             ticks: {
+                                display: false, // Axis numbers not needed for pie chart
+                                beginAtZero: true
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                display: false, // Axis numbers not needed for pie chart
                                 beginAtZero: true
                             }
                         }]
-                    }
+                    } 
                 }
             });
             }
