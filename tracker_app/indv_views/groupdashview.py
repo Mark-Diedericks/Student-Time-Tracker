@@ -48,8 +48,8 @@ def groupdash(request, group_id, mem_id):
     weeks = utils.get_weeks_entries(g, mems, tasks, user_mem)
 
     # If there is POST data, it is a logtime request. Handle logging.
-    if (request.method == "POST") and (g is not None) and (mem is not None):
-        return logtime(request, g, mem)
+    if (request.method == "POST") and (g is not None) and (user_mem is not None):
+        return logtime(request, g, user_mem, mem_id != -1)
     
     return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'title': g.groupName})
 
@@ -84,10 +84,10 @@ def groupdash(request, group_id, mem_id):
 
 
 
-def logtime(request, group, member):   
+def logtime(request, group, member, red_mem):   
     # If there is no POST data, show the normal groupdash
     if request.method != "POST":
-        return groupdash(request, group.id, member.id)
+        return groupdash(request, group.id, member.id if red_mem else -1)
 
     # Get POST data
     cat = None
@@ -99,7 +99,10 @@ def logtime(request, group, member):
         hours = request.POST['hours']
     except:
         print("Failed to get POST component", request.POST['hours'], request.POST['task'])
-        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
+        if red_mem:
+            return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
+        else:
+            return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group.id]))
 
 
     # Create time entry and save it
@@ -109,4 +112,7 @@ def logtime(request, group, member):
     print("Added time log for ", member.id, " with ", hours, " in category ", cat.categoryName)
 
     # Go back to group page
-    return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
+    if red_mem:
+        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
+    else:
+        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group.id]))

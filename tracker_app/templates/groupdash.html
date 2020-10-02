@@ -72,6 +72,7 @@
     None of the above has been implemented and only the New Log button should belong in this template. -->
     
 {% if not is_owner %}
+{% if active_member is None  or  active_member.person == request.user %}
 <hr>
 <div class="row justify-content-center">
     <h5 style="color: var(--accent1); padding-bottom: 2vh;">Log Time</h5>
@@ -92,6 +93,7 @@
         <input type="submit">
     </form>
 </div>
+{% endif %}
 {% endif %}
 
 {% endblock %}
