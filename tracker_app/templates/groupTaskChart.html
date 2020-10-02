@@ -24,7 +24,7 @@
                     labels: [{% for m in members %}"{{m.prettyname}}",{% endfor %}], //Get people's name
                     datasets: [{
                         label: 'Hours worked on project    {{ w.fullname }}',
-                        data: getData(), //Get people's total times (for time frame)
+                        data: getData{{forloop.counter0}}(), //Get people's total times (for time frame)
 
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -66,7 +66,7 @@
             });
             }
             //Obtains the data for the given task
-            function getData(){
+            function getData{{forloop.counter0}}(){
                 var x = document.getElementById("taskSelector{{forloop.counter0}}").value;
                 console.log(x)//Needs to be removed when done
                 taskList = [{% for t in tasks %}"{{t.categoryName}}",{% endfor %}] //get Tasks
