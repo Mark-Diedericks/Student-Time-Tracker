@@ -41,7 +41,9 @@
                     {% include "groupchart.html" with members=w.members %}
                     {% include "groupTaskChart.html" with members=w.members %}
                 {% endif %}
+                {% if active_member is not None %}
                 {% include "taskchart.html" with members=w.members %}
+                {% endif %}
                 
                 <!-- Date Range Content -->
                 {% include "timetable.html" with members=w.members %}
