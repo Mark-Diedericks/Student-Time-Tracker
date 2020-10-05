@@ -51,8 +51,12 @@
                 additionalColours = members.length - 6
                 if (additionalColours > 0){
                     for (i = 0; i < additionalColours; i++) {
-                        colours.push(colours[i])
-                        borderColours.push(colours[i])
+                        x = i
+                        if (i > 5){
+                            x = (i%6)
+                        }
+                        colours.push(colours[x])
+                        borderColours.push(colours[x])
                     }
                 }
                 coloursArray = []
