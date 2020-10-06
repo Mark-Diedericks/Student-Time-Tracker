@@ -24,6 +24,13 @@ def addmember(request, group_id):
         # Members textbox
         mem_text = request.POST['membersField']
 
+        # Members CSV upload
+        try:
+            mem_file = request.FILES['file']
+        except:
+            print('No file given')
+            mem_file = None
+
         # Attempt to get the group
         try:
             g = models.Group.objects.get(pk = group_id)
@@ -60,4 +67,4 @@ def addmember(request, group_id):
         
         return redirect("/dashboard/")
     else:
-        return render(request,'add_member_group.html')
+        return render(request,'add_member_group.html',{'group_id': group_id})

@@ -11,6 +11,7 @@ from tracker_app import utils
 from tracker_app.indv_views import userdashview
 from tracker_app.indv_views import groupdashview
 from tracker_app.indv_views import creategroupview
+from tracker_app.indv_views import addmemberview
 
 import csv, io
 from django.contrib import messages
@@ -43,3 +44,8 @@ def groupdash(request, group_id, mem_id = -1):
 @login_required
 def creategroup(request):
     return creategroupview.creategroup(request)
+
+##### ADD MEMBER ######
+@login_required
+def addmember(request,group_id):
+    return addmemberview.addmember(request,group_id)
