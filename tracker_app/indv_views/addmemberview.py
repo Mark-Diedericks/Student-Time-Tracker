@@ -16,7 +16,7 @@ from django.contrib import messages
 def addmember(request, group_id):
     # Only staff can add a member to an existing group
     if not utils.is_staff(request.user):
-        return redirect("/dashboard/")
+        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group_id]))
 
 
     if request.method == 'POST':
@@ -65,6 +65,6 @@ def addmember(request, group_id):
             mem = models.GroupMember(roles = role_str, person = p, group = g)
             mem.save()
         
-        return redirect("/dashboard/")
+        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group_id]))
     else:
         return render(request,'add_member_group.html',{'group_id': group_id})

@@ -36,23 +36,27 @@
                     <h4> {{ w.simplename }} </h4>
                 </div>
 
-                <!-- Charts -->
+                <!-- Charts - for group -->
                 {% if is_owner or user.is_superuser %}
                     {% include "groupchart.html" with members=w.members %}
                     {% include "groupTaskChart.html" with members=w.members %}
                 {% endif %}
+                
+                <!-- Charts - for individual -->
                 {% if active_member is not None %}
-                {% include "taskchart.html" with members=w.members %}
+                    {% include "taskchart.html" with members=w.members %}
                 {% endif %}
                 
-                <!-- Date Range Content -->
+                <!-- Members Table -->
                 {% include "timetable.html" with members=w.members %}
             </div>
         {% endfor %}
     </div>
 
     <!-- Add Member Button-->
-    <a class = "ml-2" href="/addmember/{{ group_id }}/" style="position: absolute; top: -3.8vh; left: 2vh;">Add Members</a>
+    {% if is_owner %}
+    <a class = "ml-2" href="/addmember/{{ group.pk }}/" style="position: absolute; top: -3.8vh; left: 2vh;">Add Members</a>
+    {% endif %}
 
     <!-- Next/Prev Buttons -->
     <a class="carousel-control-prev" href="#dateRangeCarousel" role="button" data-slide="prev">
