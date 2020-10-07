@@ -6,44 +6,41 @@
 <form method="POST" enctype="multipart/form-data">
     <!--{% csrf_token %}
     {{ form }}-->
-    <div class="row  justify-content-center    dash-content">
+    <div class="row  justify-content-center    dash-content" style="overflow-x: auto;">
         <div class="col-12">
-            <div class="row  justify-content-center" style="margin-top: 4vh;">
-                <label for="groupName" style="width: 10vh;">Group Name</label>
-                <input name="groupName" type="text" id="groupName" style="margin-left: 1vh;" maxlength="30">
+            <div class="row justify-content-center" style="margin-top: 2vh; min-width: var(--mw-gcontent);">
+                <div class="item"    style="margin-top: 1vh; position: relative; display: inline-block; margin-left: 24px; margin-right: 24px;">
+                    <label for="groupName" style="width: 92px;">Group Name</label>
+                    <input name="groupName" type="text" id="groupName" maxlength="30" style="min-width: 256px;">
+                </div>
+
+                <div class="item"    style="margin-top: 1vh; position: relative; display: inline-block; margin-left: 24px; margin-right: 24px;">
+                    <label for="unitCode" style="width: 92px">Unit Code</label>
+                    <input name="unitCode" type="text" id="unitCode" maxlength="7" style="min-width: 256px;">
+                </div>
             </div>
 
-            <div class="row  justify-content-center" style="margin-top: 4vh;">
-                <label for="unitCode" style="width: 10vh;">Unit Code</label>
-                <input name="unitCode" type="text" id="unitCode" style="margin-left: 1vh;" maxlength="7">
-            </div>
-
-            <hr>
+            <hr style="min-width: var(--mw-gcontent);">
 
 
 
-            <div class="item" style="margin-top: 4vh;">
+            <div class="item" style="margin-top: 4vh; min-width: var(--mw-gcontent);">
                 {% include "add_members.html"%}
             </div>
 
             <hr>
             
-            <div class="item" style="margin-top: 4vh;">
+            <div class="item" style="margin-top: 4vh; min-width: var(--mw-gcontent);">
                 {% include "members_upload.html"%}
             </div>
             
 
-            <hr>
+            <hr style="min-width: var(--mw-gcontent);">
 
-            <div class="row  justify-content-center" style="margin-top: 4vh;">
+            <div class="row  justify-content-center" style="margin-bottom: 16px; min-width: var(--mw-gcontent);">
                 <input type="submit">
             </div>
         </div>
-    </div>
-
-
-
-    <div class="row  justify-content-center" style="margin-top: 4vh;">
     </div>
 </form>
 

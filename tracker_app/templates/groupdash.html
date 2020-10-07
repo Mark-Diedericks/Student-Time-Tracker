@@ -18,9 +18,9 @@
 
     <!-- Carousel Content -->
     {% if not is_owner %}
-    <div class="carousel-inner" style="max-height: 72vh; min-height: 72vh; overflow-y: scroll; overflow-x: scroll; margin-top: 2vh;">
+    <div class="carousel-inner" style="max-height: 72vh; min-height: 72vh; overflow-y: scroll; overflow-x: auto; margin-top: 2vh;">
     {% else %}
-    <div class="carousel-inner" style="max-height: 90vh; min-height: 90vh; overflow-y: scroll; overflow-x: scroll; margin-top: 2vh;">
+    <div class="carousel-inner" style="max-height: 90vh; min-height: 90vh; overflow-y: scroll; overflow-x: auto; margin-top: 2vh;">
     {% endif %}
 
         {% for w in weeks %}
