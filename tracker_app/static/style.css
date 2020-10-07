@@ -10,6 +10,8 @@
     --accent3: #20796a; /*#693464;*/
     --accent4: #c61a26;
     --accent5: #45687b;
+
+    --head-height: 64px;
 }
 
 h1, h2, h3, h4, h5 {
@@ -21,25 +23,15 @@ body {
 }
 
 .header-height {
-    /* Legacy support, use % */
-    min-height: 8%;
-    max-height: 8%;
-    height: 8%;
-
-    min-height: 8vh;
-    max-height: 8vh;
-    height: 8vh;
+    min-height: var(--head-height);
+    max-height: var(--head-height);
+    height: var(--head-height);
 }
 
 .content-height {
-    /* Legacy support, use % */
-    min-height: 92%;
-    max-height: 92%;
-    height: 92%;
-
-    min-height: 92vh;
-    max-height: 92vh;
-    height: 92vh;
+    min-height: calc(100vh - var(--head-height));
+    max-height: calc(100vh - var(--head-height));
+    height: calc(100vh - var(--head-height));
 }
 
 
