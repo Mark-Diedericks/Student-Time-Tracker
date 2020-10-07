@@ -49,14 +49,12 @@
                 
                 <!-- Members Table -->
                 {% include "timetable.html" with members=w.members %}
+
+                <!-- Whitespace -->
+                <div class="row justify-content-center" style="min-height: 40px;"></div>
             </div>
         {% endfor %}
     </div>
-
-    <!-- Add Member Button-->
-    {% if is_owner %}
-    <a class = "ml-2" href="/addmember/{{ group.pk }}/" style="position: absolute; top: -3.8vh; left: 2vh;">Add Members</a>
-    {% endif %}
 
     <!-- Next/Prev Buttons -->
     <a class="carousel-control-prev" href="#dateRangeCarousel" role="button" data-slide="prev">

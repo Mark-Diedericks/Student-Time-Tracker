@@ -4,7 +4,16 @@
         <table>
             <tbody>
                 <tr>
-                    <th>Name</th>
+                    <th>
+                        <!-- Add Member Button-->
+                        {% if is_owner %}
+                            <a class = "ml-2" href="/addmember/{{ group.pk }}/" style="color: white;">
+                                <i class="fa fa-plus-circle" style="color: white; font-size: 150%; vertical-align: bottom;"></i>
+                            </a>
+                        {% endif %}
+
+                        <span style="padding-left: 8px;">Name</span>
+                    </th>
                     <th>Role/s</th>
         
                     {% for t in tasks %}
@@ -40,7 +49,7 @@
 {% else %}
 <!-- Display for Specific member (active_member) -->
     <div class="row  justify-content-center">
-        <h5>{{ active_member.person.get_full_name }} ({{ active_member.roles }})</h5>
+        <h5>{{ active_member.person.get_full_name }}</h5>
     </div>    
 
     <div class="row  justify-content-center" style="margin-bottom: 2vh;">
