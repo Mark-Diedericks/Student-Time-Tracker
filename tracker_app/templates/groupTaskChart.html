@@ -18,12 +18,12 @@
         <canvas id="pie{{forloop.counter0}}"></canvas>
         <script>
         
-        var myChart = null;
+        var myChart{{forloop.counter0}} = null;
         function taskFunc{{forloop.counter0}}() {
-            if (myChart != null){
-                myChart.destroy()
+            if (myChart{{forloop.counter0}} != null){
+                myChart{{forloop.counter0}}.destroy()
             }
-            myChart = 
+            myChart{{forloop.counter0}}= 
             new Chart(document.getElementById('pie{{forloop.counter0}}').getContext('2d'), {
                 type: 'pie',
                 data: {
