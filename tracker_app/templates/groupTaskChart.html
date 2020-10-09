@@ -3,10 +3,9 @@
     <h4>Task Chart</h3>
 </div>
 
-
+<!-- Lets the user choose what task they want to see in a pie chart -->
 <div class="row justify-content-center" style="padding-left: 14vh; padding-right: 14vh; margin-bottom: 1vh;">
     <select name="task" id="taskSelector{{forloop.counter0}}" onchange="taskFunc{{forloop.counter0}}()">
-        <!-- <option>Choose a task</option> -->
         {% for t in tasks %}
             <option value="{{ t.categoryName }}">{{t.categoryName}}</option>
         {% endfor %}
@@ -20,9 +19,12 @@
         
         var myChart{{forloop.counter0}} = null;
         function taskFunc{{forloop.counter0}}() {
+
+            //Deletes the previous chart if it exists
             if (myChart{{forloop.counter0}} != null){
                 myChart{{forloop.counter0}}.destroy()
             }
+            //Creates the pie chart
             myChart{{forloop.counter0}}= 
             new Chart(document.getElementById('pie{{forloop.counter0}}').getContext('2d'), {
                 type: 'pie',
