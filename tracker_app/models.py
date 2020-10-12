@@ -32,3 +32,8 @@ class MemberEntry(models.Model):
 
     groupMember = models.ForeignKey(GroupMember, on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey(TaskCategory, on_delete=models.CASCADE, null=True, blank=True)
+
+class SubmittedPeriod(models.Model):
+    startDate = models.DateField(default=datetime.today)
+    endDate = models.DateField(default=datetime.today)
+    

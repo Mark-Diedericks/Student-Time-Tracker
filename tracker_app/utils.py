@@ -1,6 +1,7 @@
 from datetime import datetime
 from datetime import timedelta
 from os import times
+from tracker_app.models import SubmittedPeriod
 
 from django.contrib.auth.models import User
 from tracker_app import models
@@ -22,6 +23,17 @@ class TimeStruct:
 
         self.members = []
         self.tasks = {}
+
+        # Check if the week should be flagged as submitted
+        try:
+            sDateStr = datetime.strptime(sdate, "%d/%m/%Y").strftime("%Y-%m-%d")
+            eDateStr = datetime.strptime(edate, "%d/%m/%Y").strftime("%Y-%m-%d")
+
+            sp = SubmittedPeriod.objects.get(startDate=sDateStr).get(endDate=eDateStr)
+            self.submitted = (sp is not None)
+        except:
+            self.submitted = False
+            
 
     def add_member(self, mem, tasks):
         for t in tasks:

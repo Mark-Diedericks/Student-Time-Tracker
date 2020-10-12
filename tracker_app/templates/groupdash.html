@@ -33,7 +33,7 @@
                 
                 <!-- Date Range Heading -->
                 <div class="row justify-content-center group-content" style="margin-bottom: 4vh;">
-                    <h3> {{ w.simplename }} </h3>
+                    <h3> {{ w.simplename }} - {{w.submitted}} </h3>
                 </div>
 
                 <!-- Charts - for group -->
@@ -85,7 +85,7 @@
 </div>
 
 <div class="row justify-content-center">
-    <form method="POST" > {% csrf_token %}
+    <form method="POST" name="logtime" id="logtime"> {% csrf_token %}
         <label for="hours">Hours</label>
         <input name="hours" type="number" id="hours" min="0.5" step="0.5">
 
