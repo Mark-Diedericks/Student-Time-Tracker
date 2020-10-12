@@ -12,7 +12,7 @@ ROLES_DICT = {"0": "Owner",
             "2": "Member",} ### TODO, add more roles
 
 class TimeStruct:
-    def __init__(self, sname, fname, sdate, edate, isat = False):
+    def __init__(self, groupObj, sname, fname, sdate, edate, isat = False):
         self.simplename = sname
         self.fullname = fname
 
@@ -29,11 +29,13 @@ class TimeStruct:
             sDateStr = datetime.strptime(sdate, "%d/%m/%Y").strftime("%Y-%m-%d")
             eDateStr = datetime.strptime(edate, "%d/%m/%Y").strftime("%Y-%m-%d")
 
-            sp = SubmittedPeriod.objects.get(startDate=sDateStr).get(endDate=eDateStr)
+            sp = SubmittedPeriod.objects.get(group=groupObj).get(startDate=sDateStr).get(endDate=eDateStr)
             self.submitted = (sp is not None)
         except:
             self.submitted = False
-            
+
+        #self.submitted = (self.submitted) or (endDate < todayDate)
+
 
     def add_member(self, mem, tasks):
         for t in tasks:
@@ -101,7 +103,7 @@ def get_weeks_entries(group, members, tasks, user_mem):
         sname = "Week {}".format(idx)
         fname = "{} - {}".format(ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y"))
 
-        s_time = TimeStruct(sname, fname, ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y"))
+        s_time = TimeStruct(group, sname, fname, ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y"))
         get_times(s_time, ss, es, members, tasks, user_mem)
         weeks.append(s_time)
         
@@ -113,7 +115,7 @@ def get_weeks_entries(group, members, tasks, user_mem):
     sname = "All time"
     fname = "{} - {}".format(sd.strftime("%d/%m/%Y"), ed.strftime("%d/%m/%Y"))
 
-    s_alltime = TimeStruct(sname, fname, sd.strftime("%d/%m/%Y"), ed.strftime("%d/%m/%Y"), True)
+    s_alltime = TimeStruct(group, sname, fname, sd.strftime("%d/%m/%Y"), ed.strftime("%d/%m/%Y"), True)
     get_times(s_alltime, sd, ed, members, tasks, user_mem)
     weeks.append(s_alltime)
 
