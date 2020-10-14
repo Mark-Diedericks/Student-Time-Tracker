@@ -40,6 +40,7 @@ def groupdash(request, group_id, mem_id):
     # Get user member and check if the user is an 'owner' of the group
     user_mem = utils.get_user_member(mems, request.user)
     owner = utils.is_owner(user_mem)
+    leader = utils.is_leader(user_mem)
 
     # TODO, ensure user can view stuff.
     if (user_mem is not None) and (mem is not None) and (user_mem != mem) and (not owner):
@@ -51,8 +52,7 @@ def groupdash(request, group_id, mem_id):
     if (request.method == "POST") and (g is not None) and (user_mem is not None):
         return logtime(request, g, user_mem, mem_id != -1)
     
-    return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'title': g.groupName})
-
+    return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'is_leader': leader, 'title': g.groupName})
 
 
 

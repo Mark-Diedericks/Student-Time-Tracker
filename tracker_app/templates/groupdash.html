@@ -25,34 +25,69 @@
 
         {% for w in weeks %}
 
+        <!--Does not show w weeks data unless time log is submitted or user is not a tutor-->
+        
+        
+
+        <!--function to change submitted value-->
+        <script type="text/javascript">
+            function submitTimeLog(w)
+                {
+                w.submitted = True;
+                }
+        </script>
+
+            <!-- Submit Time Log to Tutor Button -->
+            {% if is_leader %}
+            <div class="navbar-nav" style="display: block; position: absolute; right: 84px; top: 24px; margin: 0px; padding: 0px;">
+                <button type="button" class="btn btn-primary" style= "background-color: var(--accent5);" onclick="submitTimeLog(w)">Submit Time Log</button>
+            </div>
+            {% endif %}
+
             {% if w.isalltime %}
             <div class="carousel-item active">
             {% else %}
             <div class="carousel-item">
             {% endif %}
-                
+
                 <!-- Date Range Heading -->
                 <div class="row justify-content-center group-content" style="margin-bottom: 4vh;">
-                    <h3> {{ w.simplename }} - {{w.submitted}} </h3>
+                    <h3> {{ w.simplename }} - {% if w.submitted %} Submitted {% else %} Not Submitted {% endif %} </h3>
                 </div>
 
                 <!-- Charts - for group -->
-                {% if is_owner or user.is_superuser %}
+                <!-- only displays charts to tutor if time log summitted for that week-->
+                {% if is_owner or user.is_superuser or is_leader %}
+                {% if is_staff == True and w.submitted == True %}
+                    {% include "groupchart.html" with members=w.members %}
+                    {% include "groupTaskChart.html" with members=w.members %}
+                {% elif is_staff == False %}
                     {% include "groupchart.html" with members=w.members %}
                     {% include "groupTaskChart.html" with members=w.members %}
                 {% endif %}
+                {% endif %}
                 
                 <!-- Charts - for individual -->
+                <!-- only displays chart to tutor if time log summitted for that week-->
                 {% if active_member is not None %}
-                    {% include "taskchart.html" with members=w.members %}
+                {% if is_staff == True and w.submitted == True %}
+                    {% include "taskchart.html" with members=w.members%}
+                {% elif is_staff == False %}
+                    {% include "taskchart.html" with members=w.members%}
+                {% endif %}
                 {% endif %}
                 
                 <!-- Members Table -->
-                {% include "timetable.html" with members=w.members %}
-
+                <!-- only displays table to tutor if time log summitted for that week-->
+                {% if is_staff == True and w.submitted == True %}
+                    {% include "timetable.html" with members=w.members%}
+                {% elif is_staff == False %}
+                    {% include "timetable.html" with members=w.members%}
+                {% endif %}
                 <!-- Whitespace -->
                 <div class="row justify-content-center" style="min-height: 40px;"></div>
             </div>
+        
         {% endfor %}
     </div>
 
