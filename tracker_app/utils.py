@@ -34,7 +34,10 @@ class TimeStruct:
         except:
             self.submitted = False
 
-        #self.submitted = (self.submitted) or (endDate < todayDate)
+        # submitted will be set to true if week has passed
+        # and time log for that week will be automatically submitted
+        todayDate = datetime.combine(datetime.today(), datetime.min.time()).strftime("%d/%m/%Y")
+        self.submitted = (self.submitted) or (edate < todayDate)
 
 
     def add_member(self, mem, tasks):
@@ -180,6 +183,16 @@ def is_owner(member):
         return False
 
     return "0" in member.roles
+
+def is_leader(member):
+    """
+    Checks if a given GroupMember has the leader (1) role
+    """
+    if member is None:
+        return False
+
+    return "1" in member.roles
+
 
 
 def get_user_member(members, user):
