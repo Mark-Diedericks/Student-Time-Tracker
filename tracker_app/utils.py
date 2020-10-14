@@ -39,11 +39,14 @@ class TimeStruct:
 
     def add_member(self, mem, tasks):
         for t in tasks:
+            # Add the task entry to the member
             mem.add_task(t)
 
+            # Make sure the group has the task registered
             if not (t.taskname in self.tasks):
                 self.tasks[t.taskname] = 0
             
+            # Add task to group total
             self.tasks[t.taskname] += t.totaltime
 
         self.members.append(mem)
@@ -54,17 +57,20 @@ class MemberStruct:
         self.totaltime = 0
         self.visible = vis
 
+        # Get the names of each role the member has
         roles = []
         for r in mem.roles.split(','):
             if r in ROLES_DICT:
                 roles.append(ROLES_DICT[r])
 
+        # Set the pretty names for roles and member name
         self.prettyroles = ', '.join(roles)
         self.prettyname = mem.person.get_full_name
 
         self.tasks = []
 
     def add_task(self, task):
+        # Save the task and add it to the member's total time
         self.tasks.append(task)
         self.totaltime += task.totaltime
 
@@ -77,6 +83,7 @@ class TaskStruct:
         self.taskEntries = entries
         self.totaltime = 0
 
+        # Calculate the total time for the given task
         for ent in list(entries):
             self.totaltime += ent.hoursSpent
 
@@ -103,7 +110,10 @@ def get_weeks_entries(group, members, tasks, user_mem):
         sname = "Week {}".format(idx)
         fname = "{} - {}".format(ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y"))
 
+        # Create the time struct for the current time period
         s_time = TimeStruct(group, sname, fname, ss.strftime("%d/%m/%Y"), es.strftime("%d/%m/%Y"))
+
+        # Get the times relevant to the current time period
         get_times(s_time, ss, es, members, tasks, user_mem)
         weeks.append(s_time)
         
@@ -115,7 +125,10 @@ def get_weeks_entries(group, members, tasks, user_mem):
     sname = "All time"
     fname = "{} - {}".format(sd.strftime("%d/%m/%Y"), ed.strftime("%d/%m/%Y"))
 
+    # Create the time struct for the all time period
     s_alltime = TimeStruct(group, sname, fname, sd.strftime("%d/%m/%Y"), ed.strftime("%d/%m/%Y"), True)
+
+    # Get the times relevant to the all time period
     get_times(s_alltime, sd, ed, members, tasks, user_mem)
     weeks.append(s_alltime)
 
@@ -123,9 +136,11 @@ def get_weeks_entries(group, members, tasks, user_mem):
 
 def get_times(s_time, start, end, members, tasks, user_mem):
     for m in members:
+        # Get entries from the member, for the group, for the giveen time period
         entries = models.MemberEntry.objects.filter(groupMember = m)
         ent = entries.filter(entered__range=[start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")])
 
+        # Whether or not the times should be shown to the logged in user
         should_show = (m ==  user_mem) or is_owner(user_mem)
 
         # Append total task times, associated with member
