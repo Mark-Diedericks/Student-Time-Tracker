@@ -12,7 +12,7 @@ ROLES_DICT = {"0": "Owner",
             "2": "Member",} ### TODO, add more roles
 
 class TimeStruct:
-    def __init__(self, groupObj, sname, fname, sdate, edate, isat = False):
+    def __init__(self, g, sname, fname, sdate, edate, isat = False):
         self.simplename = sname
         self.fullname = fname
 
@@ -24,20 +24,24 @@ class TimeStruct:
         self.members = []
         self.tasks = {}
 
+        sDateObj = datetime.strptime(sdate, "%d/%m/%Y")
+        eDateObj = datetime.strptime(edate, "%d/%m/%Y")
+        todayDate = datetime.combine(datetime.today(), datetime.min.time())
+
         # Check if the week should be flagged as submitted
         try:
-            sDateStr = datetime.strptime(sdate, "%d/%m/%Y").strftime("%Y-%m-%d")
-            eDateStr = datetime.strptime(edate, "%d/%m/%Y").strftime("%Y-%m-%d")
+            
+            print("Checking SubmittedPeriods", sdate, edate, g)
+            sp = models.SubmittedPeriod.objects.filter(group = g).filter(startDate=sDateObj).filter(endDate=eDateObj)
 
-            sp = SubmittedPeriod.objects.get(group=groupObj).get(startDate=sDateStr).get(endDate=eDateStr)
-            self.submitted = (sp is not None)
+            self.submitted = len(list(sp)) > 0
         except:
+            print("    Error checking periods")
             self.submitted = False
 
         # submitted will be set to true if week has passed
         # and time log for that week will be automatically submitted
-        todayDate = datetime.combine(datetime.today(), datetime.min.time()).strftime("%d/%m/%Y")
-        self.submitted = (self.submitted) or (edate < todayDate)
+        self.submitted = (self.submitted) or (eDateObj < todayDate) or (isat)
 
 
     def add_member(self, mem, tasks):

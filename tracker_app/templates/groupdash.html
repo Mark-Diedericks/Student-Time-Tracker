@@ -23,26 +23,9 @@
     <div class="carousel-inner" style="max-height: 90vh; min-height: 90vh; overflow-y: scroll; overflow-x: auto; margin-top: 2vh;">
     {% endif %}
 
-        {% for w in weeks %}
 
         <!--Does not show w weeks data unless time log is submitted or user is not a tutor-->
-        
-
-            <!-- Submit Time Log to Tutor Button -->
-            {% if is_leader %}
-            <div class="navbar-nav" style="display: block; position: absolute; right: 84px; top: 24px; margin: 0px; padding: 0px;">
-                <button type="button" class="btn btn-primary" style= "background-color: var(--accent5);" onclick="submitTimeLog{{forloop.counter0}}(w)">Submit Time Log</button>
-            </div>
-            {% endif %}
-
-            <!--function to change submitted value-->
-            <script type="text/javascript">
-                function submitTimeLog{{forloop.counter0}}(w)
-                {
-                w.submitted = True;
-                }
-            </script>
-
+        {% for w in weeks %}
 
             {% if w.isalltime %}
             <div class="carousel-item active">
@@ -52,36 +35,52 @@
 
                 <!-- Date Range Heading -->
                 <div class="row justify-content-center group-content" style="margin-bottom: 4vh;">
-                    <h3> {{ w.simplename }} - {% if w.submitted %} Submitted {% else %} Not Submitted {% endif %} </h3>
-                </div>
+                    <h3> {{ w.simplename }}  </h3>
+                    <!-- Submit Time Log to Tutor Button -->
+                    {% if   is_leader  and not w.isalltime %}
+                        {% if w.submitted %}
+                                <p style="font-family: FontAwesome; color: var(--accent3); font-size: x-large; margin-left: 1em;">&#xf058;</p>
+                        {% else %}
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input name="start" type="text" id="start" value="{{ w.start }}" style="display: none;">
+                                <input name="end" type="text" id="end" value="{{ w.end }}" style="display: none;">
+        
+                                <input name="submittime" type="submit" class="btn btn-primary" style="background-color: transparent; border-color: 
+                                        transparent; font-family: FontAwesome; color: var(--accent4); font-size: x-large; margin-left: 1em; padding: 0px;"
+                                        value="&#xf058;">
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>        
+
+                
 
                 <!-- Charts - for group -->
                 <!-- only displays charts to tutor if time log summitted for that week-->
-                {% if is_owner or user.is_superuser or is_leader %}
-                {% if is_staff == True and w.submitted == True %}
+                {% if is_owner and w.submitted %}
                     {% include "groupchart.html" with members=w.members %}
                     {% include "groupTaskChart.html" with members=w.members %}
-                {% elif is_staff == False %}
+                {% elif not is_owner %}
                     {% include "groupchart.html" with members=w.members %}
                     {% include "groupTaskChart.html" with members=w.members %}
-                {% endif %}
                 {% endif %}
                 
                 <!-- Charts - for individual -->
                 <!-- only displays chart to tutor if time log summitted for that week-->
                 {% if active_member is not None %}
-                {% if is_staff == True and w.submitted == True %}
+                {% if is_staff and w.submitted %}
                     {% include "taskchart.html" with members=w.members%}
-                {% elif is_staff == False %}
+                {% elif not is_staff %}
                     {% include "taskchart.html" with members=w.members%}
                 {% endif %}
                 {% endif %}
                 
                 <!-- Members Table -->
                 <!-- only displays table to tutor if time log summitted for that week-->
-                {% if is_staff == True and w.submitted == True %}
+                {% if is_staff and w.submitted %}
                     {% include "timetable.html" with members=w.members%}
-                {% elif is_staff == False %}
+                {% elif not is_staff %}
                     {% include "timetable.html" with members=w.members%}
                 {% endif %}
                 <!-- Whitespace -->
@@ -120,7 +119,7 @@
 </div>
 
 <div class="row justify-content-center">
-    <form method="POST" name="logtime" id="logtime"> {% csrf_token %}
+    <form method="POST"> {% csrf_token %}
         <label for="hours">Hours</label>
         <input name="hours" type="number" id="hours" min="0.5" step="0.5">
 
@@ -131,7 +130,7 @@
             {% endfor %}
         </select>
 
-        <input type="submit">
+        <input name="logtime" type="submit">
     </form>
 </div>
 {% endif %}

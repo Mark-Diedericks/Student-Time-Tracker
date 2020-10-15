@@ -1,3 +1,4 @@
+from tracker_app.models import SubmittedPeriod
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -9,6 +10,8 @@ from tracker_app import utils
 
 import csv, io
 from django.contrib import messages
+
+from datetime import datetime
 
 
 
@@ -48,18 +51,50 @@ def groupdash(request, group_id, mem_id):
     
     weeks = utils.get_weeks_entries(g, mems, tasks, user_mem)
 
-    # If there is POST data, it is a logtime request. Handle logging.
+    # If there is POST data, it is a POST request. Handle logging.
     if (request.method == "POST") and (g is not None) and (user_mem is not None):
-        return logtime(request, g, user_mem, mem_id != -1)
+        return handle_post(request, g, user_mem, mem_id != -1)
     
     return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'is_leader': leader, 'title': g.groupName})
 
-
-
-def logtime(request, group, member, red_mem):   
+def handle_post(request, group, member, red_mem):
     # If there is no POST data, show the normal groupdash
     if request.method != "POST":
         return groupdash(request, group.id, member.id if red_mem else -1)
+
+    if 'logtime' in request.POST:
+        return logtime(request, group, member, red_mem)
+
+    if 'submittime' in request.POST:
+        return submittime(request, group, member, red_mem)
+
+    if red_mem:
+        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
+    else:
+        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group.id]))
+
+
+def submittime(request, g, member, red_mem):  
+    print("Submit time!")
+    
+    # Attempt to get the task category from the given name, for the current group
+    try:           
+        start = datetime.strptime(request.POST['start'], "%d/%m/%Y")
+        end = datetime.strptime(request.POST['end'], "%d/%m/%Y")
+
+        sp = models.SubmittedPeriod(group = g, startDate = start, endDate = end)
+        sp.save()
+    except:
+        print("Failed to get POST component", request.POST['start'], request.POST['end'])
+
+
+    if red_mem:
+        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(g.id, member.id)))
+    else:
+        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[g.id]))
+
+
+def logtime(request, group, member, red_mem):   
 
     # Get POST data
     cat = None
