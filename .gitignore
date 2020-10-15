@@ -4,3 +4,5 @@
 /tracker_app/__pycache__/**
 /tracker_app/migration/__pycache__/**
 /tracker_app/indv_views/__pycache__/**
+/tracker_app/migrations/__pycache__/**
+/tracker_app/users/__pycache__/**
