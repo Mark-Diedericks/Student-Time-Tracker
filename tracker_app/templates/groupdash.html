@@ -27,22 +27,22 @@
 
         <!--Does not show w weeks data unless time log is submitted or user is not a tutor-->
         
-        
-
-        <!--function to change submitted value-->
-        <script type="text/javascript">
-            function submitTimeLog(w)
-                {
-                w.submitted = True;
-                }
-        </script>
 
             <!-- Submit Time Log to Tutor Button -->
             {% if is_leader %}
             <div class="navbar-nav" style="display: block; position: absolute; right: 84px; top: 24px; margin: 0px; padding: 0px;">
-                <button type="button" class="btn btn-primary" style= "background-color: var(--accent5);" onclick="submitTimeLog(w)">Submit Time Log</button>
+                <button type="button" class="btn btn-primary" style= "background-color: var(--accent5);" onclick="submitTimeLog{{forloop.counter0}}(w)">Submit Time Log</button>
             </div>
             {% endif %}
+
+            <!--function to change submitted value-->
+            <script type="text/javascript">
+                function submitTimeLog{{forloop.counter0}}(w)
+                {
+                w.submitted = True;
+                }
+            </script>
+
 
             {% if w.isalltime %}
             <div class="carousel-item active">
