@@ -10,6 +10,8 @@ from tracker_app import utils
 import csv, io
 from django.contrib import messages
 
+from datetime import datetime
+
 
 
 ##### USER DASH ######
@@ -22,8 +24,9 @@ def userdash(request):
 
         # (GroupMember, is_owner) array of all GroupMembers associated with user
         for mem in all_members:
-            if mem.person == request.user:
-                mems.append((mem, "0" in mem.roles))
+            if datetime.today().strftime('%Y-%m-%d') < mem.group.expiry.strftime('%Y-%m-%d'): # check if the group has expired. might think about permanently deleting data from the backend in future should it become necessary
+                if mem.person == request.user:
+                    mems.append((mem, "0" in mem.roles))
 
     except:
         raise Http404("Could not get User's groups")

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import int_list_validator
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # Create your models here.
@@ -12,6 +12,7 @@ class Group(models.Model):
     unitCode = models.CharField(max_length = 7)
     
     created = models.DateField(default=datetime.today)
+    expiry = models.DateField(default= datetime.today() + timedelta(days=16 * 7)) # 16 weeks by default, needs clarification with Dex
 
 class GroupMember(models.Model):
     roles = models.CharField(validators=[int_list_validator], max_length=10)
