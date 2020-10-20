@@ -51,22 +51,42 @@ def groupdash(request, group_id, mem_id):
     
     weeks = utils.get_weeks_entries(g, mems, tasks, user_mem)
 
+    can_log = False         # Can log time if the week isn't submitted, view below
+    can_sub = leader        # Can submit week logs if they're a leader
+    # Determine
+    # Get the current week (which is where times will be submitted to)
+    for w in weeks:
+        sDateObj = datetime.strptime(w.start, "%d/%m/%Y")
+        eDateObj = datetime.strptime(w.end, "%d/%m/%Y")
+        todayDate = datetime.combine(datetime.today(), datetime.min.time())
+
+        # Today's date falls within this week
+        if (sDateObj <= todayDate) and (todayDate <= eDateObj):
+            can_log = (not w.submitted) # Can log time if the current week is not submitted
+            print(can_log)
+            break
+
+
     # If there is POST data, it is a POST request. Handle logging.
     if (request.method == "POST") and (g is not None) and (user_mem is not None):
-        return handle_post(request, g, user_mem, mem_id != -1)
+        return handle_post(request, g, user_mem, mem_id != -1, can_log, can_sub)
     
     return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'is_leader': leader, 'title': g.groupName})
 
-def handle_post(request, group, member, red_mem):
+
+
+
+
+def handle_post(request, group, member, red_mem, can_log, can_sub):
     # If there is no POST data, show the normal groupdash
     if request.method != "POST":
         return groupdash(request, group.id, member.id if red_mem else -1)
 
     if 'logtime' in request.POST:
-        return logtime(request, group, member, red_mem)
+        return logtime(request, group, member, red_mem, can_log)
 
     if 'submittime' in request.POST:
-        return submittime(request, group, member, red_mem)
+        return submittime(request, group, member, red_mem, can_sub)
 
     if red_mem:
         return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
@@ -74,19 +94,20 @@ def handle_post(request, group, member, red_mem):
         return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group.id]))
 
 
-def submittime(request, g, member, red_mem):  
-    print("Submit time!")
-    
-    # Attempt to get the task category from the given name, for the current group
-    try:           
-        start = datetime.strptime(request.POST['start'], "%d/%m/%Y")
-        end = datetime.strptime(request.POST['end'], "%d/%m/%Y")
 
-        sp = models.SubmittedPeriod(group = g, startDate = start, endDate = end)
-        sp.save()
-    except:
-        print("Failed to get POST component", request.POST['start'], request.POST['end'])
 
+
+def submittime(request, g, member, red_mem, can_sub):  
+    if can_sub:
+        # Attempt to get the task category from the given name, for the current group
+        try:           
+            start = datetime.strptime(request.POST['start'], "%d/%m/%Y")
+            end = datetime.strptime(request.POST['end'], "%d/%m/%Y")
+
+            sp = models.SubmittedPeriod(group = g, startDate = start, endDate = end)
+            sp.save()
+        except:
+            print("Failed to get POST component", request.POST['start'], request.POST['end'])
 
     if red_mem:
         return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(g.id, member.id)))
@@ -94,29 +115,34 @@ def submittime(request, g, member, red_mem):
         return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[g.id]))
 
 
-def logtime(request, group, member, red_mem):   
-
-    # Get POST data
-    cat = None
-    hours = 0
-    
-    # Attempt to get the task category from the given name, for the current group
-    try:           
-        cat = models.TaskCategory.objects.filter(group = group).get(categoryName = request.POST['task'])
-        hours = request.POST['hours']
-    except:
-        print("Failed to get POST component", request.POST['hours'], request.POST['task'])
-        if red_mem:
-            return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
-        else:
-            return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group.id]))
 
 
-    # Create time entry and save it
-    entry = models.MemberEntry(hoursSpent = hours, groupMember = member, category = cat)
-    entry.save()
 
-    print("Added time log for ", member.id, " with ", hours, " in category ", cat.categoryName)
+def logtime(request, group, member, red_mem, can_log):   
+    if can_log:
+        # Get POST data
+        cat = None
+        hours = 0
+
+        # Attempt to get the task category from the given name, for the current group
+        try:           
+            cat = models.TaskCategory.objects.filter(group = group).get(categoryName = request.POST['task'])
+            hours = request.POST['hours']
+        except:
+            print("Failed to get POST component", request.POST['hours'], request.POST['task'])
+            
+            if red_mem:
+                return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
+            else:
+                return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group.id]))
+
+
+        # Create time entry and save it
+        entry = models.MemberEntry(hoursSpent = hours, groupMember = member, category = cat)
+        entry.save()
+
+        print("Added time log for ", member.id, " with ", hours, " in category ", cat.categoryName)
+
 
     # Go back to group page
     if red_mem:
