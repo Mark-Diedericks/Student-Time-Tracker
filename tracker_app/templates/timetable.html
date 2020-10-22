@@ -1,3 +1,11 @@
+<div class="dropdown-menu dropdown-menu-sm" id="context-menu{{idx}}">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+</div>
+
+
+
 {% if active_member is None %}
 <!-- Display for Group -->
     <div class="row  justify-content-center group-content">
@@ -22,11 +30,11 @@
                 </tr>
         
             {% for m in members %}
-                <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.member.pk }}/';">
+                <tr {% if is_owner %} style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.member.pk }}/';"{% endif %}>
                     
-                    {% if active_member == m.member %}
+                    {% if request.user == m.member.person %}
                         <td class="selected-mem">{{ m.prettyname }}</td>
-                        <td>{{ m.prettyroles }}</td>
+                        <td id="member-roles{{idx}}">{{ m.prettyroles }}</td>
                     {% else %}
                         <td>{{ m.prettyname }}</td>
                         <td>{{ m.prettyroles }}</td>
@@ -72,9 +80,9 @@
             {% for m in members %}
 
                 {% if active_member == m.member %}
-                    <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.member.pk }}/';">
+                    <tr>
                         <td class="selected-mem">{{ m.prettyname }}</td>
-                        <td>{{ m.prettyroles }}</td>
+                        <td {% if request.user == m.member.person %} id="member-roles{{idx}}" {% endif %}>{{ m.prettyroles }}</td>
             
                         {% for t in m.tasks %}
                             <td>{{ t.totaltime }}</td>
@@ -87,3 +95,22 @@
     </div>
 {% endif %}
 
+<script>
+    $('#member-roles{{idx}}').on('contextmenu', function(e) {
+      var top = e.pageY - 10;
+      var left = e.pageX - 90;
+      $("#context-menu{{idx}}").css({
+        display: "block",
+        top: top,
+        left: left,
+        position: "fixed"
+      }).addClass("show");
+      return false; //blocks default Webbrowser right click menu
+    }).on("click", function() {
+      $("#context-menu{{idx}}").removeClass("show").hide();
+    });
+    
+    $("#context-menu{{idx}} a").on("click", function() {
+      $(this).parent().removeClass("show").hide();
+    });
+    </script>
