@@ -25,7 +25,9 @@ def profile(request):
 
 @login_required
 def passwordResetLoggedIn(request):
-    return render(request,'users/loggedInPasswordReset.html')
+    if request.method == 'POST':
+        pass
+    return render(request,'users/loggedInPasswordReset.html', {'form': form})
 
 # #Function to get user id and email
 # def getEmail(request):
