@@ -23,6 +23,10 @@ def register(request):
 def profile(request):
     return render(request,'users/profile.html')
 
+@login_required
+def passwordResetLoggedIn(request):
+    return render(request,'users/loggedInPasswordReset.html')
+
 # #Function to get user id and email
 # def getEmail(request):
 #     current_user = request.user

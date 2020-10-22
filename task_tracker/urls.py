@@ -53,4 +53,6 @@ urlpatterns = [
              template_name='users/passwordResetComplete.html'
          ),
         name='password_reset_complete'),
+    path('password_reset/',
+         users_views.passwordResetLoggedIn, name='password-reset'),
 ]
