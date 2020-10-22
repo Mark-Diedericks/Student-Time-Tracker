@@ -17,6 +17,7 @@ from datetime import datetime
 ##### USER DASH ######
 def userdash(request):
     staff = utils.is_staff(request.user)
+   
 
     try:
         all_members = list(models.GroupMember.objects.all())    # Get all members
@@ -24,8 +25,9 @@ def userdash(request):
 
         # (GroupMember, is_owner) array of all GroupMembers associated with user
         for mem in all_members:
-            if datetime.today().strftime('%Y-%m-%d') < mem.group.expiry.strftime('%Y-%m-%d'): # check if the group has expired. might think about permanently deleting data from the backend in future should it become necessary
-                if mem.person == request.user:
+            if mem.person == request.user: 
+                owner = utils.is_owner(mem)
+                if not((datetime.today().strftime('%Y-%m-%d') >= mem.group.expiry.strftime('%Y-%m-%d')) and owner):  # check if the group has expired. might think about permanently deleting data from the backend in future should it become necessary
                     mems.append((mem, "0" in mem.roles))
 
     except:
