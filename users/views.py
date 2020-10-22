@@ -22,3 +22,10 @@ def register(request):
 @login_required
 def profile(request):
     return render(request,'users/profile.html')
+
+# #Function to get user id and email
+# def getEmail(request):
+#     current_user = request.user
+#     user = User.objects.get(current_user.id)
+#     user_email = user.email
+#     return user_email
