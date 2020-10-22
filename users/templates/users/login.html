@@ -12,8 +12,13 @@
                 <button class = "btn-outline-info" type="submit">Log In</button>
             </div>
         </form>
+        <div>
+            <small class = "text-muted">
+                Forgot your password?<a class = "ml-2" href="{% url 'password_reset' %}">Click Here</a>
+            </small>
+        </div>
         <small class = "text-muted">
-            Forgot your password?<a class = "ml-2" href="{% url 'password_reset' %}">Click Here</a>
+            Don't have an account?<a class = "ml-2" href="{% url 'register' %}">Click Here</a>
         </small>
     </div>
 

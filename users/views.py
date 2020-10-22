@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 
 # Create your views here.
 def register(request):
@@ -23,15 +25,19 @@ def register(request):
 def profile(request):
     return render(request,'users/profile.html')
 
+#Changes the user's password to the new entered password
 @login_required
 def passwordResetLoggedIn(request):
+    current_user = request.user
+    user_name = current_user.get_username()
     if request.method == 'POST':
-        pass
-    return render(request,'users/loggedInPasswordReset.html', {'form': form})
-
-# #Function to get user id and email
-# def getEmail(request):
-#     current_user = request.user
-#     user = User.objects.get(current_user.id)
-#     user_email = user.email
-#     return user_email
+        newPass = request.POST['password']
+        try:
+            if validate_password(newPass, user=current_user, password_validators=None) == None:
+                u = User.objects.get(username= user_name)
+                u.set_password(newPass)
+                u.save()
+                return render(request,'users/loggedInPasswordResetDone.html')
+        except:
+            return render(request,'users/loggedInPasswordResetFail.html')
+    return render(request,'users/loggedInPasswordReset.html')
