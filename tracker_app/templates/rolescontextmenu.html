@@ -1,0 +1,79 @@
+<div class="dropdown-menu dropdown-menu-sm" id="context-menu{{idx}}">
+    <a style="position: absolute; width: 1.55em; height: 1.55em; top: -.5em; right: -0.5em; padding: 4px;  display: flex; align-items: center;
+            border-radius: 10em; border-width: 1px; border-color: lightgrey; border-style: solid; background-color: var(--background1);
+            cursor: pointer; cursor: hand;" id="close-cm{{idx}}">
+        <i class="fa fa-times" aria-hidden="true" style="color: var(--accent1); font-size: 1.2em; vertical-align: middle;"></i>
+    </a>
+
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+</div>
+
+
+<script>
+    function showCM{{idx}}(e) {
+        console.log("{{idx}}");
+        var top = e.pageY - 10;
+        var left = e.pageX - 90;
+
+        $("#context-menu{{idx}}").css({
+            display: "block",
+            top: top,
+            left: left,
+            position: "fixed"
+        }).addClass("show");
+    }
+
+
+    $(document).ready(function() {
+        var sTime, eTime;
+        var LP = false;
+
+        // On mobile, show the roles menu as when long-pressing
+        $('#member-roles{{idx}}').on('click', function(e) {
+            if(LP) {
+                showCM{{idx}}(e);
+            } else {
+                var link = $('#member-roles{{idx}}').attr("data-link");
+
+                if ((link) && (link.length > 0))
+                    window.location = link;
+            }
+
+            return false;
+        })
+        
+        // On desktop, show the roles menu as when right-clicking
+        $('#member-roles{{idx}}').on('contextmenu', function(e) {
+            showCM{{idx}}(e);
+            return false; //blocks default Webbrowser right click menu
+        })
+
+
+
+        $('#member-roles{{idx}}').on('mousedown', function () {
+            sTime = new Date().getTime();
+        });
+
+        $('#member-roles{{idx}}').on('mouseup', function () {
+            eTime = new Date().getTime();
+            LP = (eTime - sTime > 500) ? true : false;
+        });
+
+
+        // Submit changes on context menu
+        $("#close-cm{{idx}}").on("click", function() {
+            $("#context-menu{{idx}}").removeClass("show").hide();
+        });
+
+    });
+
+
+    // Escape key to close context menu
+    $(document).keyup(function(e) {
+        if (e.key == "Escape") {
+            $("#context-menu{{idx}}").removeClass("show").hide();
+        }
+    });
+</script>
