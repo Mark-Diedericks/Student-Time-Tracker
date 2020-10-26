@@ -7,7 +7,7 @@
 
     <form method="POST" id="form-cm{{idx}}"> {% csrf_token %}
         {% for r in roles %}
-            <input type="checkbox" class="dropdown-item" href="#" data-role={{r.pk}} data-rolename="{{r.name}}">{{r.name}}</a>
+            <div class="dropdown-item disabled"><input type="checkbox" style="float:right; pointer-events:auto" href="#" data-role={{r.pk}} data-rolename="{{r.name}}">{{r.name}}</a></div>
         {% endfor %}
     </form>
 
@@ -16,7 +16,7 @@
 
 
 <script>
-
+    
 
     function showCM{{idx}}(e) {
         var top = e.pageY - 10;
@@ -27,7 +27,7 @@
         var rolenames = roles.split(",");
         rolenames.forEach(function(item, idx, _) {
             
-            $("#form-cm{{idx}}").children('input').each(function() {
+            $("#form-cm{{idx}}").children("div").children('input').each(function() {
                 if ($(this).attr("data-rolename") == item) {
                     $(this).prop("checked", true);
                 } else {
