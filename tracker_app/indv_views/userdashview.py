@@ -28,7 +28,7 @@ def userdash(request):
             if mem.person == request.user: 
                 owner = utils.is_owner(mem)
                 if not((datetime.today().strftime('%Y-%m-%d') >= mem.group.expiry.strftime('%Y-%m-%d')) and owner):  # check if the group has expired. might think about permanently deleting data from the backend in future should it become necessary
-                    mems.append((mem, "0" in mem.roles))
+                    mems.append((mem, owner))
 
     except:
         raise Http404("Could not get User's groups")
