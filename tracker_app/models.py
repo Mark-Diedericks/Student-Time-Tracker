@@ -12,13 +12,22 @@ class Group(models.Model):
     unitCode = models.CharField(max_length = 7)
     
     created = models.DateField(default=datetime.today)
-    expiry = models.DateField(default= datetime.today() + timedelta(days=16 * 7)) # 16 weeks by default, needs clarification with Dex
+    expiry = models.DateField(default= datetime.today() + timedelta(days=16 * 7))   # 16 weeks by default, needs clarification with Dex
 
 class GroupMember(models.Model):
-    roles = models.CharField(validators=[int_list_validator], max_length=10)
+    roles = models.CharField(validators=[int_list_validator], max_length=10)        # Will be the ID's (pk) of MemberRole objects
 
     person = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+
+class MemberRole(models.Model):
+    name = models.CharField(max_length = 30)
+
+    is_owner = models.BooleanField()
+    is_leader = models.BooleanField()
+
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+
 
 class TaskCategory(models.Model):
     categoryName = models.CharField(max_length = 30)

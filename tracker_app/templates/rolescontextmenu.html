@@ -5,9 +5,9 @@
         <i class="fa fa-times" aria-hidden="true" style="color: var(--accent1); font-size: 1.2em; vertical-align: middle;"></i>
     </a>
 
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
+    {% for r in roles %}
+    <a class="dropdown-item" href="#" data-role={{r.pk}}>{{r.name}}</a>
+    {% endfor %}
 </div>
 
 
