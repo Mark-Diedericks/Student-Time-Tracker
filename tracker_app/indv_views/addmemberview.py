@@ -46,7 +46,10 @@ def addmember(request, group_id):
 
         # Attempt to add all members, create new if not existing
         for entry in entries:
-            role_str = entry[0].strip()
+            try:
+                def_role = list(models.MemberRole.objects.filter(group = g).filter(name = entry[0].strip()))[0]
+            except:
+                def_role = models.MemberRole.objects.filter(group = g).filter(name = "Developer").first()
             uname_str = entry[1].strip()
             fname_str = entry[2].strip()
             lname_str = entry[3].strip()
@@ -62,8 +65,9 @@ def addmember(request, group_id):
                 p.save()
 
             # Create the new GroupMember model the user
-            mem = models.GroupMember(roles = role_str, person = p, group = g)
+            mem = models.GroupMember(person = p, group = g)
             mem.save()
+            mem.roles.add(def_role)
         
         return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group_id]))
     else:

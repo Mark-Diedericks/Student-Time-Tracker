@@ -30,29 +30,11 @@ def groupdash(request, group_id, mem_id):
         mems = list(models.GroupMember.objects.filter(group = g))
         tasks = list(models.TaskCategory.objects.filter(group = g))
 
-        # TODO move to group creation
-        # Add default roles to a group if it has none
-        if len(list(models.MemberRole.objects.filter(group = g))) == 0:
-            dev = models.MemberRole(name="Developer", is_owner=False, is_leader=False, group = g)
-            dev.save()
-
-            lead = models.MemberRole(name="Leader", is_owner=False, is_leader=True, group = g)
-            lead.save()
-
-            own = models.MemberRole(name="Owner", is_owner=True, is_leader=False, group = g)
-            own.save()
+        
 
 
         roles_set = models.MemberRole.objects.filter(group = g)
         roles = list(roles_set)
-
-        # TODO move to group creation/add members
-        # Give members a default role if they don't already have one
-        def_role = roles_set.first()
-        for m in list(mems):
-            mem_roles = list(m.roles.all())
-            if len(mem_roles) == 0:
-                m.roles.add(def_role)
 
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
