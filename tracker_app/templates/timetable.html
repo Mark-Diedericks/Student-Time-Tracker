@@ -28,10 +28,10 @@
                     data-member='{{m.member.pk}}' data-group='{{group.pk}}' data-roles='{{m.roles}}'>
                     
                     {% if request.user == m.member.person %}
-                        <td class="selected-mem">{{ m.prettyname }}{{m.member.pk}}</td>
+                        <td class="selected-mem">{{ m.prettyname }}</td>
                         <td>{{ m.prettyroles }}</td>
                     {% else %}
-                        <td>{{ m.prettyname }}{{m.member.pk}}</td>
+                        <td>{{ m.prettyname }}}</td>
                         <td>{{ m.prettyroles }}</td>
                     {% endif %}
         
