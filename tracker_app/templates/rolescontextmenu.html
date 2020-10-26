@@ -5,17 +5,23 @@
         <i class="fa fa-times" aria-hidden="true" style="color: var(--accent1); font-size: 1.2em; vertical-align: middle;"></i>
     </a>
 
-    {% for r in roles %}
-    <a class="dropdown-item" href="#" data-role={{r.pk}}>{{r.name}}</a>
-    {% endfor %}
+    <form method="POST" id="form-cm{{idx}}"> {% csrf_token %}
+        {% for r in roles %}
+            <input type="checkbox" class="dropdown-item" href="#" data-role={{r.pk}}>{{r.name}}</a>
+        {% endfor %}
+    </form>
+
+    <a class="dropdown-item" href="#" id="submit-cm{{idx}}" style="font-style: italic;">Submit</a>
 </div>
 
 
 <script>
     function showCM{{idx}}(e) {
-        console.log("{{idx}}");
         var top = e.pageY - 10;
         var left = e.pageX - 90;
+        
+        // TODO checkbox already selected roles
+        var roles = $('#member-roles{{idx}}').attr("data-roles");
 
         $("#context-menu{{idx}}").css({
             display: "block",
@@ -23,6 +29,30 @@
             left: left,
             position: "fixed"
         }).addClass("show");
+    }
+
+    function submitCM{{idx}}() {
+        
+        var m_id = $('#member-roles{{idx}}').attr("data-member");
+        var g_id = $('#member-roles{{idx}}').attr("data-group");
+        var roles = [];
+
+        var url = ''
+        var data = $('#form-cm{{idx}}').serialize();
+        console.log(data);
+
+        // TODO POST request to submit data
+        /*$("#context-menu{{idx}}").children('input').each(function() {
+            var r_id = $(this).attr("data-role");
+            if (r_id) {
+                roles.push({
+                    key: r_id,
+                    value: $(this).is(":checked"),
+                })
+            }
+        });
+
+        console.log(roles);*/
     }
 
 
@@ -62,11 +92,16 @@
         });
 
 
-        // Submit changes on context menu
+        // Discard changes on context menu, close it
         $("#close-cm{{idx}}").on("click", function() {
             $("#context-menu{{idx}}").removeClass("show").hide();
         });
 
+        // Submit changes on context menu, close it
+        $("#submit-cm{{idx}}").on("click", function() {
+            $("#context-menu{{idx}}").removeClass("show").hide();
+            submitCM{{idx}}();
+        });
     });
 
 
