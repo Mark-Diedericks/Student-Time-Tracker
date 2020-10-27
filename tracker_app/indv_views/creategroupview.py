@@ -40,7 +40,7 @@ def creategroup(request):
             g.save()
             # TODO move to group creation
             # Add default roles to a group if it has none
-            dev = models.MemberRole(name="Developer", is_owner=False, is_leader=False, group = g)
+            dev = models.MemberRole(name="Member", is_owner=False, is_leader=False, group = g)
             dev.save()
 
             lead = models.MemberRole(name="Leader", is_owner=False, is_leader=True, group = g)

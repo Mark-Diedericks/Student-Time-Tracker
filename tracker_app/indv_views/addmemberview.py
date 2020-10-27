@@ -49,7 +49,7 @@ def addmember(request, group_id):
             try:
                 def_role = list(models.MemberRole.objects.filter(group = g).filter(name = entry[0].strip()))[0]
             except:
-                def_role = models.MemberRole.objects.filter(group = g).filter(name = "Developer").first()
+                def_role = models.MemberRole.objects.filter(group = g).filter(name = "Member").first()
             uname_str = entry[1].strip()
             fname_str = entry[2].strip()
             lname_str = entry[3].strip()
