@@ -5,17 +5,25 @@
         <i class="fa fa-times" aria-hidden="true" style="color: var(--accent1); font-size: 1.2em; vertical-align: middle;"></i>
     </a>
 
-    <form method="POST" id="form-cm{{idx}}"> {% csrf_token %}
+    <!-- Form for selecting existing roles (checkboxes) -->
+    <form method="POST" id="form-cm{{idx}}" style="padding-top: 0.4em;"> {% csrf_token %}
         {% for r in roles %}
             <div class="dropdown-item disabled">
                 <label>{{r.name}}</label>
-                <input type="checkbox" name="roles-{{idx}}" {% if r.name == "Owner" %} disabled {% endif %}
-                value="{{forloop.counter0}}" style="float:right; pointer-events:auto" data-role={{r.pk}} data-rolename="{{r.name}}"/>
+                <input type="checkbox" name="selectedRoles" {% if r.name == "Owner" %} disabled {% endif %}
+                        style="float:right; pointer-events:auto" value={{r.pk}} data-role={{r.pk}} data-rolename="{{r.name}}"/>
             </div>
         {% endfor %}
     </form>
+    
+    <!-- Input for creating a new role (textbox)-->
+    <form method="POST" id="form-new-cm{{idx}}" style="padding-top: 0.4em;"> {% csrf_token %}
+        <div style="padding-left: 1.5em; padding-right: 1.5em;">
+            <input name="newRoleName" type="text" id="newRoleName{{idx}}" maxlength="15" placeholder="New Role">
+        </div>
+    </form>
 
-    <a class="dropdown-item" id="submit-cm{{idx}}" style="font-style: italic;">Submit</a>
+    <a class="dropdown-item" id="submit-cm{{idx}}" style="font-style: italic; margin-top: 0.8em; text-align: center; cursor: pointer;">Submit</a>
 </div>
 
 <script>
@@ -56,28 +64,55 @@
         }).addClass("show");
     }
 
-    function submitCM{{idx}}() {
+    function submitRoles{{idx}}() {
         
         var m_id = $('#member-roles{{idx}}').attr("data-member");
         var g_id = $('#member-roles{{idx}}').attr("data-group");
-        var roles = [];
 
-        var url = ''
-        var data = $('#form-cm{{idx}}').serialize();
-        console.log(data);
+        //POST request to submit role changes 
+        $.ajax({
+            type: 'POST',
+            url: '/dashboard/' + g_id + '/' + m_id + '/setroles/',
+            data: $('#form-cm{{idx}}').serialize(),
+            success: function(res) {
+                console.log(res);
+                if (res.status == 'ok') {                    
+                    // Updates the roles cell with the new pretty print roles
+                    $("#member-roles-disp{{idx}}").text(res.prettyroles);
+                    $('#member-roles{{idx}}').attr("data-roles", res.prettyroles)
+                }
+            }
+        });
+    }
 
-        // TODO POST request to submit data
-        /*$("#context-menu{{idx}}").children('input').each(function() {
-            var r_id = $(this).attr("data-role");
-            if (r_id) {
-                roles.push({
-                    key: r_id,
-                    value: $(this).is(":checked"),
-                })
+    function createRole{{idx}}(role_name) {
+
+        var m_id = $('#member-roles{{idx}}').attr("data-member");
+        var g_id = $('#member-roles{{idx}}').attr("data-group");
+
+
+        // POST request to create new role
+        $.ajax({
+            type: 'POST',
+            url: '/dashboard/' + g_id + '/addrole/',
+            data: $('#form-new-cm{{idx}}').serialize(),
+            success: function(res) {
+                if (res.status == 'ok') {
+                    
+                    var template_html = `
+                        <div class="dropdown-item disabled">
+                            <label>ROLE_NAME</label>
+                            <input type="checkbox" name="selectedRoles" checked="checked" value=ROLE_ID
+                                    style="float:right; pointer-events:auto" data-role=ROLE_ID data-rolename="ROLE_NAME"/>
+                        </div>`
+                    
+                    // Add a new checkbox to the context menu, for the newly created role
+                    $("#form-cm{{idx}}").append(template_html.replaceAll('ROLE_ID', res.id).replaceAll('ROLE_NAME', res.name));
+                }
             }
         });
 
-        console.log(roles);*/
+        $("#newRoleName{{idx}}").val('');   // Clear input
     }
 
 
@@ -125,7 +160,22 @@
         // Submit changes on context menu, close it
         $("#submit-cm{{idx}}").on("click", function() {
             $("#context-menu{{idx}}").removeClass("show").hide();
-            submitCM{{idx}}();
+            submitRoles{{idx}}();
+        });
+
+        // Enter key to create a new role
+        $("#newRoleName{{idx}}").keyup(function(e) {
+            if(e.key == "Enter") {
+                createRole{{idx}}();   // Create the role
+            }
+        });
+
+        // Prevent Enter key from submitting POST forms
+        $(window).keydown(function(e) {
+            if(e.key == "Enter") {
+                e.preventDefault();
+                return false;
+            }
         });
     });
 
@@ -134,6 +184,7 @@
     $(document).keyup(function(e) {
         if (e.key == "Escape") {
             $("#context-menu{{idx}}").removeClass("show").hide();
+            return false;
         }
     });
 </script>
