@@ -140,4 +140,16 @@
 {% endif %}
 {% endif %}
 
+<div class="row justify-content-center">
+    <form method="POST"> {% csrf_token %}
+        <label for="title">Subject</label>
+        <input name="title" type="text" id="title" maxlength="100" required>
+
+        <label for="description">Description</label>
+        <input name="description" type="text" id="description">
+        <input name="reportissue" type="submit" class="fa fa-exclamation-circle" style="font-family: FontAwesome; color: var(--accent4); font-size:38px;background-color: transparent; border-color: 
+        transparent;margin-top: 4vh; margin-bottom: 8vh; padding: 0px;" value="&#xf06a;">
+    </form>
+</div>
+
 {% endblock %}
