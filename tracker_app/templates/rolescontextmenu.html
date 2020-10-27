@@ -7,13 +7,16 @@
 
     <form method="POST" id="form-cm{{idx}}"> {% csrf_token %}
         {% for r in roles %}
-            <div class="dropdown-item disabled"><input type="checkbox" style="float:right; pointer-events:auto" href="#" data-role={{r.pk}} data-rolename="{{r.name}}">{{r.name}}</a></div>
+            <div class="dropdown-item disabled">
+                <label>{{r.name}}</label>
+                <input type="checkbox" name="roles-{{idx}}" {% if r.name == "Owner" %} disabled {% endif %}
+                value="{{forloop.counter0}}" style="float:right; pointer-events:auto" data-role={{r.pk}} data-rolename="{{r.name}}"/>
+            </div>
         {% endfor %}
     </form>
 
-    <a class="dropdown-item" href="#" id="submit-cm{{idx}}" style="font-style: italic;">Submit</a>
+    <a class="dropdown-item" id="submit-cm{{idx}}" style="font-style: italic;">Submit</a>
 </div>
-
 
 <script>
     
@@ -22,19 +25,29 @@
         var top = e.pageY - 10;
         var left = e.pageX - 90;
         
-        // TODO checkbox already selected roles
+        // Uncheck all boxes to begin with
+        $("#form-cm{{idx}}").children("div").each(function() {
+            var chk = $(this).children('input').first()
+            chk.prop("checked", false);
+        });
+
+
+        
         var roles = $('#member-roles{{idx}}').attr("data-roles");
         var rolenames = roles.split(",");
+        // Check the boxes which correspond to roles the member has
         rolenames.forEach(function(item, idx, _) {
-            
-            $("#form-cm{{idx}}").children("div").children('input').each(function() {
-                if ($(this).attr("data-rolename") == item) {
-                    $(this).prop("checked", true);
-                } else {
-                    $(this).prop("checked", false);
+            $("#form-cm{{idx}}").children("div").each(function() {
+                var chk = $(this).children('input').first()
+                if (chk.attr("data-rolename").trim() == item.trim()) {
+                    chk.prop("checked", true);
                 }
             });
         });
+
+
+
+        // Show the context menu
         $("#context-menu{{idx}}").css({
             display: "block",
             top: top,

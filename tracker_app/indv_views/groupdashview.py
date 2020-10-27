@@ -29,13 +29,7 @@ def groupdash(request, group_id, mem_id):
         g = models.Group.objects.get(pk = group_id)
         mems = list(models.GroupMember.objects.filter(group = g))
         tasks = list(models.TaskCategory.objects.filter(group = g))
-
-        
-
-
-        roles_set = models.MemberRole.objects.filter(group = g)
-        roles = list(roles_set)
-
+        roles = list(models.MemberRole.objects.filter(group = g))
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
