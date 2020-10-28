@@ -30,9 +30,19 @@
     
 
     function showCM{{idx}}(e) {
-        var top = e.pageY - 10;
-        var left = e.pageX - 90;
+        var top_pref = e.pageY - 10;
+        var left_pref = e.pageX - 90;
         
+        var top_clamp = $(document).height() - $("#context-menu{{idx}}").outerHeight();
+        var left_clamp = $(document).width() - $("#context-menu{{idx}}").outerWidth();
+        
+        console.log(top_pref + ' : ' + top_clamp);
+        console.log(left_pref + ' : ' + left_clamp);
+
+        // Ensure the context menu stays within document bounds (doesn't get cutoff)
+        var top = Math.max(Math.min(top_pref, top_clamp), 0);
+        var left = Math.max(Math.min(left_pref, left_clamp), 0);
+
         // Uncheck all boxes to begin with
         $("#form-cm{{idx}}").children("div").each(function() {
             var chk = $(this).children('input').first()
