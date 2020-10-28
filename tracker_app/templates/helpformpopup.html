@@ -28,9 +28,13 @@
 </div>
 
 
-<a id="help-button" style="position: absolute; display: block; padding: 0px; right: 2vw; bottom: 1.5vw; cursor: pointer;"> 
+{% if is_owner %}
+    <!-- Button to get them to the issue viewing page TODO-->
+{% else %}
+<a id="help-button" style="position: absolute; display: block; padding: 0px; right: 1.2em; bottom: 1em; cursor: pointer;"> 
     <i class="fa fa-question-circle" style="color: var(--accent3); font-size:32px; background-color: transparent; border-color: transparent;"></i>
 </a>
+{% endif %}
 
 <script>
     
