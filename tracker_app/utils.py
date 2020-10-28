@@ -7,10 +7,6 @@ from django.contrib.auth.models import User
 from tracker_app import models
 import csv, io
 
-ROLES_DICT = {"0": "Owner",
-            "1": "Leader",
-            "2": "Member",} ### TODO, add more roles
-
 class TimeStruct:
     def __init__(self, g, sname, fname, sdate, edate, isat = False):
         self.simplename = sname
@@ -65,13 +61,12 @@ class MemberStruct:
         self.visible = vis
 
         # Get the names of each role the member has
-        roles = []
-        for r in mem.roles.split(','):
-            if r in ROLES_DICT:
-                roles.append(ROLES_DICT[r])
+        rArr = []
+        for r in list(mem.roles.all()):
+            rArr.append(r.name)
 
         # Set the pretty names for roles and member name
-        self.prettyroles = ', '.join(roles)
+        self.prettyroles = ', '.join(rArr)
         self.prettyname = mem.person.get_full_name
 
         self.tasks = []
@@ -183,19 +178,23 @@ def is_owner(member):
     """
     Checks if a given GroupMember has the owner (0) role
     """
-    if member is None:
-        return False
 
-    return "0" in member.roles
+    for r in list(member.roles.all()):
+        if r.is_owner:
+            return True
+
+    return False
 
 def is_leader(member):
     """
     Checks if a given GroupMember has the leader (1) role
     """
-    if member is None:
-        return False
 
-    return "1" in member.roles
+    for r in list(member.roles.all()):
+        if r.is_leader:
+            return True
+
+    return False
 
 
 

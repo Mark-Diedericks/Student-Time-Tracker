@@ -22,11 +22,14 @@
                 </tr>
         
             {% for m in members %}
-                <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.member.pk }}/';">
+                <tr {% if request.user == m.member.person %} id="member-roles{{idx}}" {% endif %}
+                        {% if is_owner or request.user == m.member.person %}style='cursor: pointer; cursor: hand;' 
+                        data-link='/dashboard/{{ group.pk }}/{{ m.member.pk }}/' {% else %} data-link='' {% endif %} 
+                        data-member='{{m.member.pk}}' data-group='{{group.pk}}' data-roles='{{m.prettyroles}}'>
                     
-                    {% if active_member == m.member %}
+                    {% if request.user == m.member.person %}
                         <td class="selected-mem">{{ m.prettyname }}</td>
-                        <td>{{ m.prettyroles }}</td>
+                        <td{% if request.user == m.member.person %} id="member-roles-disp{{idx}}" {% endif %}>{{ m.prettyroles }}</td>
                     {% else %}
                         <td>{{ m.prettyname }}</td>
                         <td>{{ m.prettyroles }}</td>
@@ -72,9 +75,13 @@
             {% for m in members %}
 
                 {% if active_member == m.member %}
-                    <tr style='cursor: pointer; cursor: hand;' onclick="window.location='/dashboard/{{ group.pk }}/{{ m.member.pk }}/';">
+                    <tr {% if request.user == m.member.person %} id="member-roles{{idx}}" {% endif %}
+                            {% if is_owner or request.user == m.member.person %}style='cursor: pointer; cursor: hand;' 
+                            data-link='/dashboard/{{ group.pk }}/{{ m.member.pk }}/' {% else %} data-link='' {% endif %} 
+                            data-member='{{m.member.pk}}' data-group='{{group.pk}}' data-roles='{{m.prettyroles}}'>
+                            
                         <td class="selected-mem">{{ m.prettyname }}</td>
-                        <td>{{ m.prettyroles }}</td>
+                        <td {% if request.user == m.member.person %} id="member-roles-disp{{idx}}" {% endif %}>{{ m.prettyroles }}</td>
             
                         {% for t in m.tasks %}
                             <td>{{ t.totaltime }}</td>
@@ -87,3 +94,8 @@
     </div>
 {% endif %}
 
+
+<!-- Role selecting context menu -->
+
+
+{% include "rolescontextmenu.html" with uid="member-roles{{idx}}"%}

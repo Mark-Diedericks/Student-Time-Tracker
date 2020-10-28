@@ -29,6 +29,7 @@ def groupdash(request, group_id, mem_id):
         g = models.Group.objects.get(pk = group_id)
         mems = list(models.GroupMember.objects.filter(group = g))
         tasks = list(models.TaskCategory.objects.filter(group = g))
+        roles = list(models.MemberRole.objects.filter(group = g))
     except:                                     # Group doesn't exist, go back to userdash 
         print("Group does not exist ", group_id)
         return redirect('/dashboard/')
@@ -71,7 +72,7 @@ def groupdash(request, group_id, mem_id):
     if (request.method == "POST") and (g is not None) and (user_mem is not None):
         return handle_post(request, g, user_mem, mem_id != -1, can_log, can_sub)
     
-    return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'is_leader': leader, 'title': g.groupName})
+    return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'roles': roles, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'is_leader': leader, 'title': g.groupName})
 
 
 

@@ -83,9 +83,9 @@
                 <!-- Members Table -->
                 <!-- only displays table to tutor if time log summitted for that week-->
                 {% if is_staff and w.submitted %}
-                    {% include "timetable.html" with members=w.members%}
+                    {% include "timetable.html" with members=w.members idx=forloop.counter0 %}
                 {% elif not is_staff %}
-                    {% include "timetable.html" with members=w.members%}
+                    {% include "timetable.html" with members=w.members idx=forloop.counter0 %}
                 {% endif %}
                 <!-- Whitespace -->
                 <div class="row justify-content-center" style="min-height: 40px;"></div>

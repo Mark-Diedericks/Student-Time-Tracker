@@ -12,6 +12,7 @@ from tracker_app.indv_views import userdashview
 from tracker_app.indv_views import groupdashview
 from tracker_app.indv_views import creategroupview
 from tracker_app.indv_views import addmemberview
+from tracker_app.indv_views import manageroles
 
 import csv, io
 from django.contrib import messages
@@ -38,6 +39,18 @@ def userdash(request):
 @login_required
 def groupdash(request, group_id, mem_id = -1):
     return groupdashview.groupdash(request, group_id, mem_id)
+    
+
+##### ADD ROLE ######
+@login_required
+def addrole(request, group_id):
+    return manageroles.addrole(request, group_id)
+    
+    
+##### SET ROLE ######
+@login_required
+def setroles(request, group_id, mem_id):
+    return manageroles.setroles(request, group_id, mem_id)
 
 
 ##### GROUP CREATE ######

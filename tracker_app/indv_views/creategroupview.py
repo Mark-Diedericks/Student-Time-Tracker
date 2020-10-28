@@ -38,6 +38,16 @@ def creategroup(request):
         try:
             g = models.Group(groupName = gname, unitCode = gcode)
             g.save()
+            # TODO move to group creation
+            # Add default roles to a group if it has none
+            dev = models.MemberRole(name="Member", is_owner=False, is_leader=False, group = g)
+            dev.save()
+
+            lead = models.MemberRole(name="Leader", is_owner=False, is_leader=True, group = g)
+            lead.save()
+
+            own = models.MemberRole(name="Owner", is_owner=True, is_leader=False, group = g)
+            own.save()
         except:
             print('Failed to create group', gname, gcode)
             return redirect('/dashboard/')
@@ -64,8 +74,15 @@ def creategroup(request):
                         entries.append(row)
         
         # Attempt to add all members, create new if not existing
+        owner_user = models.GroupMember(person=request.user, group=g)
+        owner_user.save()
+        owner_user.roles.add(own)
+        
         for entry in entries:
-            role_str = entry[0].strip()
+            try:
+                def_role = list(models.MemberRole.objects.filter(group = g).filter(name = entry[0].strip()))[0]
+            except:
+                def_role = dev
             uname_str = entry[1].strip()
             fname_str = entry[2].strip()
             lname_str = entry[3].strip()
@@ -81,8 +98,10 @@ def creategroup(request):
                 p.save()
 
             # Create the new GroupMember model the user
-            mem = models.GroupMember(roles = role_str, person = p, group = g)
+            mem = models.GroupMember(person = p, group = g)
             mem.save()
+            mem.roles.add(def_role)
+            
 
         
         return redirect("/dashboard/")

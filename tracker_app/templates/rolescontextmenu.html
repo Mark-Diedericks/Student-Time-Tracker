@@ -1,0 +1,203 @@
+<div class="dropdown-menu dropdown-menu-sm" id="context-menu{{idx}}">
+    <a style="position: absolute; width: 1.55em; height: 1.55em; top: -.5em; right: -0.5em; padding: 4px;  display: flex; align-items: center;
+            border-radius: 10em; border-width: 1px; border-color: lightgrey; border-style: solid; background-color: var(--background1);
+            cursor: pointer; cursor: hand;" id="close-cm{{idx}}">
+        <i class="fa fa-times" aria-hidden="true" style="color: var(--accent1); font-size: 1.2em; vertical-align: middle;"></i>
+    </a>
+
+    <!-- Form for selecting existing roles (checkboxes) -->
+    <form method="POST" id="form-cm{{idx}}" style="padding-top: 0.4em;"> {% csrf_token %}
+        {% for r in roles %}
+            <div class="dropdown-item disabled">
+                <label>{{r.name}}</label>
+                <input type="checkbox" name="selectedRoles" {% if r.name == "Owner" %} disabled {% endif %}
+                        style="float:right; pointer-events:auto" value={{r.pk}} data-role={{r.pk}} data-rolename="{{r.name}}"/>
+            </div>
+        {% endfor %}
+    </form>
+    
+    <!-- Input for creating a new role (textbox)-->
+    <form method="POST" id="form-new-cm{{idx}}" style="padding-top: 0.4em;"> {% csrf_token %}
+        <div style="padding-left: 1.5em; padding-right: 1.5em;">
+            <input name="newRoleName" type="text" id="newRoleName{{idx}}" maxlength="15" placeholder="New Role (Press Enter)">
+        </div>
+    </form>
+
+    <a class="dropdown-item" id="submit-cm{{idx}}" style="font-style: italic; margin-top: 0.8em; text-align: center; cursor: pointer;">Submit</a>
+</div>
+
+<script>
+    
+
+    function showCM{{idx}}(e) {
+        var top_pref = e.pageY - 10;
+        var left_pref = e.pageX - 90;
+        
+        var top_clamp = $(document).height() - $("#context-menu{{idx}}").outerHeight();
+        var left_clamp = $(document).width() - $("#context-menu{{idx}}").outerWidth();
+        
+        console.log(top_pref + ' : ' + top_clamp);
+        console.log(left_pref + ' : ' + left_clamp);
+
+        // Ensure the context menu stays within document bounds (doesn't get cutoff)
+        var top = Math.max(Math.min(top_pref, top_clamp), 0);
+        var left = Math.max(Math.min(left_pref, left_clamp), 0);
+
+        // Uncheck all boxes to begin with
+        $("#form-cm{{idx}}").children("div").each(function() {
+            var chk = $(this).children('input').first()
+            chk.prop("checked", false);
+        });
+
+
+        
+        var roles = $('#member-roles{{idx}}').attr("data-roles");
+        var rolenames = roles.split(",");
+        // Check the boxes which correspond to roles the member has
+        rolenames.forEach(function(item, idx, _) {
+            $("#form-cm{{idx}}").children("div").each(function() {
+                var chk = $(this).children('input').first()
+                if (chk.attr("data-rolename").trim() == item.trim()) {
+                    chk.prop("checked", true);
+                }
+            });
+        });
+
+
+
+        // Show the context menu
+        $("#context-menu{{idx}}").css({
+            display: "block",
+            top: top,
+            left: left,
+            position: "fixed"
+        }).addClass("show");
+    }
+
+    function submitRoles{{idx}}() {
+        
+        var m_id = $('#member-roles{{idx}}').attr("data-member");
+        var g_id = $('#member-roles{{idx}}').attr("data-group");
+
+        //POST request to submit role changes 
+        $.ajax({
+            type: 'POST',
+            url: '/dashboard/' + g_id + '/' + m_id + '/setroles/',
+            data: $('#form-cm{{idx}}').serialize(),
+            success: function(res) {
+                console.log(res);
+                if (res.status == 'ok') {                    
+                    // Updates the roles cell with the new pretty print roles
+                    $("#member-roles-disp{{idx}}").text(res.prettyroles);
+                    $('#member-roles{{idx}}').attr("data-roles", res.prettyroles)
+
+                    if (res.refresh)
+                        location.reload();
+                }
+            }
+        });
+    }
+
+    function createRole{{idx}}(role_name) {
+
+        var m_id = $('#member-roles{{idx}}').attr("data-member");
+        var g_id = $('#member-roles{{idx}}').attr("data-group");
+
+
+        // POST request to create new role
+        $.ajax({
+            type: 'POST',
+            url: '/dashboard/' + g_id + '/addrole/',
+            data: $('#form-new-cm{{idx}}').serialize(),
+            success: function(res) {
+                if (res.status == 'ok') {
+                    
+                    var template_html = `
+                        <div class="dropdown-item disabled">
+                            <label>ROLE_NAME</label>
+                            <input type="checkbox" name="selectedRoles" checked="checked" value=ROLE_ID
+                                    style="float:right; pointer-events:auto" data-role=ROLE_ID data-rolename="ROLE_NAME"/>
+                        </div>`
+                    
+                    // Add a new checkbox to the context menu, for the newly created role
+                    $("#form-cm{{idx}}").append(template_html.replaceAll('ROLE_ID', res.id).replaceAll('ROLE_NAME', res.name));
+                }
+            }
+        });
+
+        $("#newRoleName{{idx}}").val('');   // Clear input
+    }
+
+
+    $(document).ready(function() {
+        var sTime, eTime;
+        var LP = false;
+
+        // On mobile, show the roles menu as when long-pressing
+        $('#member-roles{{idx}}').on('click', function(e) {
+            if(LP) {
+                showCM{{idx}}(e);
+            } else {
+                var link = $('#member-roles{{idx}}').attr("data-link");
+
+                if ((link) && (link.length > 0))
+                    window.location = link;
+            }
+
+            return false;
+        })
+        
+        // On desktop, show the roles menu as when right-clicking
+        $('#member-roles{{idx}}').on('contextmenu', function(e) {
+            showCM{{idx}}(e);
+            return false; //blocks default Webbrowser right click menu
+        })
+
+
+
+        $('#member-roles{{idx}}').on('mousedown', function () {
+            sTime = new Date().getTime();
+        });
+
+        $('#member-roles{{idx}}').on('mouseup', function () {
+            eTime = new Date().getTime();
+            LP = (eTime - sTime > 500) ? true : false;
+        });
+
+
+        // Discard changes on context menu, close it
+        $("#close-cm{{idx}}").on("click", function() {
+            $("#context-menu{{idx}}").removeClass("show").hide();
+        });
+
+        // Submit changes on context menu, close it
+        $("#submit-cm{{idx}}").on("click", function() {
+            $("#context-menu{{idx}}").removeClass("show").hide();
+            submitRoles{{idx}}();
+        });
+
+        // Enter key to create a new role
+        $("#newRoleName{{idx}}").keyup(function(e) {
+            if(e.key == "Enter") {
+                createRole{{idx}}();   // Create the role
+            }
+        });
+
+        // Prevent Enter key from submitting POST forms
+        $(window).keydown(function(e) {
+            if(e.key == "Enter") {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+
+
+    // Escape key to close context menu
+    $(document).keyup(function(e) {
+        if (e.key == "Escape") {
+            $("#context-menu{{idx}}").removeClass("show").hide();
+            return false;
+        }
+    });
+</script>
