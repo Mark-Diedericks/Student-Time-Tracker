@@ -53,7 +53,7 @@ def groupdash(request, group_id, mem_id):
 
     can_log = False         # Can log time if the week isn't submitted, view below
     can_sub = leader        # Can submit week logs if they're a leader
-    can_report = True       #might have to change to not is tutor or maybe is_student??????????
+    
     # Determine
     # Get the current week (which is where times will be submitted to)
     for w in weeks:
@@ -70,7 +70,7 @@ def groupdash(request, group_id, mem_id):
 
     # If there is POST data, it is a POST request. Handle logging.
     if (request.method == "POST") and (g is not None) and (user_mem is not None):
-        return handle_post(request, g, user_mem, mem_id != -1, can_log, can_sub, can_report)
+        return handle_post(request, g, user_mem, mem_id != -1, can_log, can_sub)
     
     return render(request, 'groupdash.html', {'group': g, 'weeks': weeks, 'tasks': tasks, 'active_member': mem, 'is_staff': staff, 'is_owner': owner, 'is_leader': leader, 'title': g.groupName})
 
@@ -78,7 +78,7 @@ def groupdash(request, group_id, mem_id):
 
 
 
-def handle_post(request, group, member, red_mem, can_log, can_sub, can_report):
+def handle_post(request, group, member, red_mem, can_log, can_sub):
     # If there is no POST data, show the normal groupdash
     if request.method != "POST":
         return groupdash(request, group.id, member.id if red_mem else -1)
@@ -88,10 +88,6 @@ def handle_post(request, group, member, red_mem, can_log, can_sub, can_report):
 
     if 'submittime' in request.POST:
         return submittime(request, group, member, red_mem, can_sub)
-
-    #add if statement for reportissue
-    if 'reportissue' in request.POST:
-        return reportissue(request, group, member, red_mem, can_report)
 
     if red_mem:
         return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
@@ -150,27 +146,6 @@ def logtime(request, group, member, red_mem, can_log):
 
 
     # Go back to group page
-    if red_mem:
-        return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
-    else:
-        return HttpResponseRedirect(reverse("tracker_app:groupdash", args=[group.id]))
-
-
-#add function for reportissue
-def reportissue(request, group, member, red_mem, can_report):  
-    if can_report:
-        # Attempt to get the task category from the given name, for the current group
-        # Attempt to get the task category from the given name, for the current group
-        try:        
-            submission_date = datetime.combine(datetime.today(), datetime.min.time())   
-            title = request.POST['title']
-            description = request.POST['description']
-            # Create a report issue and save it
-            issue = models.ReportIssue(group = group, groupMember = member, title = title, description = description, dateSubmitted = submission_date)
-            issue.save()
-        except:
-            print("Failed to get POST component", request.POST['title'], request.POST['description']) 
-
     if red_mem:
         return HttpResponseRedirect(reverse("tracker_app:groupmemdash", args=(group.id, member.id)))
     else:
