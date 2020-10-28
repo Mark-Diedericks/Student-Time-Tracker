@@ -90,6 +90,9 @@
                     // Updates the roles cell with the new pretty print roles
                     $("#member-roles-disp{{idx}}").text(res.prettyroles);
                     $('#member-roles{{idx}}').attr("data-roles", res.prettyroles)
+
+                    if (res.refresh)
+                        location.reload();
                 }
             }
         });
