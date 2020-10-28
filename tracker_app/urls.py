@@ -12,4 +12,5 @@ urlpatterns = [
     path('dashboard/<int:group_id>/<int:mem_id>/', views.groupdash, name='groupmemdash'),
 
     path('dashboard/<int:group_id>/reportissue/', views.reportissue, name='reportissue'),
+    path('displayissues/<int:group_id>/', views.displayissues, name='displayissues'),
 ]

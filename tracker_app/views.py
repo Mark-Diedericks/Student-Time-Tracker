@@ -57,3 +57,9 @@ def addmember(request,group_id):
 @login_required
 def reportissue(request, group_id):
     return issuemanager.reportissue(request, group_id)
+
+
+##### DISPLAY ISSUES ######
+@login_required
+def displayissues(request, group_id):
+    return issuemanager.display_issues(request, group_id)

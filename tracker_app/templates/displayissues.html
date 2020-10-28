@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+<div class="row justify-content-center    group-content" style="margin-bottom: 1vh;">
+    <h2>Reported Issues</h2>
+</div>
+
+<div class="row justify-content-center">
+    {% for i in issues %}
+    <h4 style="color: var(--accent3);">Submitted By - </h4>
+    <h4 style="color: var(--accent3);">{{active_member}}</h4>
+    <table style="width:100%">
+        <tr>
+            <th>Group Name</th>
+            <th>{{ i.group.groupName }}</th>
+        </tr>
+        <tr>
+            <th>Date Submitted</th>
+            <th>{{ i.dateSubmitted }}</th>
+        </tr>
+        <tr>
+            <th>Subject</th>
+            <th>{{ i.title }}</th>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <th>{{ i.description }}</th>
+        </tr>
+    </table>
+    {% endfor %}
+</div>
+
+
+{% endblock %}
