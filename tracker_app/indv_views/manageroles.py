@@ -18,6 +18,10 @@ def addrole(request, group_id):
 
     try:
         role_name = request.POST['newRoleName']             # Get name of new role
+
+        if len(role_name) == 0:
+            return JsonResponse({ 'status': 'bad' })
+
         g = models.Group.objects.get(pk = group_id)
         role = models.MemberRole(name=role_name, is_owner=False, is_leader=False, group = g)
         role.save()                                         # Create the new role, no special permissions
