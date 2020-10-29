@@ -8,8 +8,7 @@
 
 <div class="row justify-content-center">
     {% for i in issues %}
-    <h4 style="color: var(--accent3);">Submitted By - </h4>
-    <h4 style="color: var(--accent3);">{{active_member}}</h4>
+    <h4 style="color: var(--accent3);">Submitted By: {{i.groupMember.person.username}}</h4>
     <table style="width:100%">
         <tr>
             <th>Group Name</th>
