@@ -28,12 +28,14 @@
 </div>
 
 
-{% if is_owner %}
-<!-- View Reported Issues Button-->
-<a class = "ml-2" href="/displayissues/{{ group.pk }}/" style="color: var(--accent1);" data-toggle="tooltip" title="View logged issues">
-    <i class="fa fa-question-circle" style="color:  var(--accent3); font-size:32px; background-color: transparent; border-color: transparent;"></i>
+<!-- 
+<a class = "ml-2" href="/displayissues/{{ group.pk }}/" data-toggle="tooltip" title="View logged issues" style="color: var(--accent1); display: block;
+position: absolute; top: 1em; left: 1em; z-index: 1000;">
+<i class="fa fa-question-circle" style="color:  var(--accent3); font-size:32px; background-color: transparent; border-color: transparent;"></i>
 </a>
-{% else %}
+-->
+
+{% if not is_owner %}
 <a id="help-button" style="position: absolute; display: block; padding: 0px; right: 1.2em; bottom: 1em; cursor: pointer;" data-toggle="tooltip" title="Log an issue"> 
     <i class="fa fa-question-circle" style="color: var(--accent3); font-size:32px; background-color: transparent; border-color: transparent;"></i>
 </a>
@@ -41,7 +43,21 @@
 
 <script>
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();   
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+        leftpx = $("#titleHeaderText").outerWidth() + 16;
+    
+        {% if is_owner %}
+        var btnHelpTemplate = `
+        <div style="display: block; position: absolute; left: CALC_LEFTpx; bottom: 12px; margin: 0px; padding: 0px;">
+            <a class = "ml-2" href="/displayissues/{{ group.pk }}/" data-toggle="tooltip" title="View logged issues" style="color: var(--accent1); z-index: 1000;">
+                <i class="fa fa-question-circle" style="color:  var(--accent3); font-size:32px; background-color: transparent; border-color: transparent;"></i>
+            </a>
+        </div>`
+        
+        $("#titleHeader").append(btnHelpTemplate.replaceAll('CALC_LEFT', leftpx));
+
+        {% endif %}
     });
 
     function showHelp(e) {
