@@ -49,9 +49,12 @@ position: absolute; top: 1em; left: 1em; z-index: 1000;">
     
         {% if is_owner %}
         var btnHelpTemplate = `
-        <div style="display: block; position: absolute; left: CALC_LEFTpx; bottom: 12px; margin: 0px; padding: 0px;">
-            <a class = "ml-2" href="/displayissues/{{ group.pk }}/" data-toggle="tooltip" title="View logged issues" style="color: var(--accent1); z-index: 1000;">
-                <i class="fa fa-question-circle" style="color:  var(--accent3); font-size:32px; background-color: transparent; border-color: transparent;"></i>
+        <div style="display: block; position: absolute; left: CALC_LEFTpx; bottom: 8px; margin: 0px; padding: 0px;">
+            <a class = "ml-2" href="/displayissues/{{ group.pk }}/" data-toggle="tooltip" title="View logged issues">
+                <i class="fa fa-bell" style="color:  var(--accent3); font-size:24px; background-color: transparent; border-color: transparent;" style="display: block;">
+                <i class="fa fa-exclamation" style="color: var(--accent4); font-size:14px; background-color: transparent; border-color: transparent; display: block;
+                    position: absolute; top: -4px; right: 0px; z-index: 100;"></i></i>
+                
             </a>
         </div>`
         

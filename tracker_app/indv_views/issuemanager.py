@@ -39,6 +39,21 @@ def reportissue(request, group_id):
         return JsonResponse({'status': 'bad'})
 
     return JsonResponse({'status': 'ok'})
+    
+    
+#add function for reportissue
+def removeissue(request, group_id):  
+    # Attempt to create the issue and save it to the database
+    try:        
+        id = request.POST['issueID']
+        # Create a report issue and save it
+        issue = models.ReportIssue.objects.get(pk = id)
+        issue.delete()
+    except:
+        print("Failed to get POST component", request.POST['issueID']) 
+        return JsonResponse({'status': 'bad'})
+
+    return JsonResponse({'status': 'ok'})
 
 
 def display_issues(request, group_id):

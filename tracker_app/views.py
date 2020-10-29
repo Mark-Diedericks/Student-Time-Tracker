@@ -59,6 +59,12 @@ def reportissue(request, group_id):
     return issuemanager.reportissue(request, group_id)
 
 
+##### REMOVE ISSUE ######
+@login_required
+def removeissue(request, group_id):
+    return issuemanager.removeissue(request, group_id)
+
+
 ##### DISPLAY ISSUES ######
 @login_required
 def displayissues(request, group_id):
