@@ -15,4 +15,8 @@ urlpatterns = [
 
     path('dashboard/<int:group_id>/addrole/', views.addrole, name='addrole'),
     path('dashboard/<int:group_id>/<int:mem_id>/setroles/', views.setroles, name='setroles'),
+    
+    path('dashboard/<int:group_id>/reportissue/', views.reportissue, name='reportissue'),
+    path('dashboard/<int:group_id>/removeissue/', views.removeissue, name='removeissue'),
+    path('displayissues/<int:group_id>/', views.displayissues, name='displayissues'),
 ]

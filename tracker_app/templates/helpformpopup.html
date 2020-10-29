@@ -1,0 +1,136 @@
+<div class="dropdown-menu dropdown-menu-sm" id="help-menu">
+    <a style="position: absolute; width: 1.55em; height: 1.55em; top: -.5em; right: -0.5em; padding: 4px;  display: flex; align-items: center;
+            border-radius: 10em; border-width: 1px; border-color: lightgrey; border-style: solid; background-color: var(--background1);
+            cursor: pointer; cursor: hand;" id="close-help">
+        <i class="fa fa-times" aria-hidden="true" style="color: var(--accent1); font-size: 1.2em; vertical-align: middle;"></i>
+    </a>
+
+    <div class="row justify-content-center"    style="margin-top: 2em; min-width: var(--mw-gcontent); padding-left: 4em; padding-right: 4em;">
+        <h3>Submit Issue</h3>
+    </div>
+
+    <form method="POST" id="form-help"> {% csrf_token %}
+        <div class="row justify-content-center"    style="margin-top: 1em; min-width: var(--mw-gcontent); padding-left: 4em; padding-right: 4em;">
+            <input name="title" type="text" id="title" style="min-width: 400px; height: 30px;" required placeholder="Subject">
+        </div>
+
+        <div class="row justify-content-center"    style="margin-top: 2em; min-width: var(--mw-gcontent); padding-left: 4em; padding-right: 4em;">
+            <label for="description">Please describe the issue</label>
+        </div>
+        <div class="row justify-content-center">
+            <textarea name="description" type="text" id="description" style="min-width: 400px; height: 108px;" placeholder="Issue description..." rows="16" cols="40" style="overflow-y: scroll; overflow-x: scroll;"></textarea>
+        </div>
+
+        <input name="reportissue" type="submit" style="display: none;">
+    </form>
+
+    <a class="dropdown-item" id="submit-help" style="font-style: italic; margin-top: 0.8em; margin-bottom: 0.8em; text-align: center; cursor: pointer;">Submit</a>
+</div>
+
+
+<!-- 
+<a class = "ml-2" href="/displayissues/{{ group.pk }}/" data-toggle="tooltip" title="View logged issues" style="color: var(--accent1); display: block;
+position: absolute; top: 1em; left: 1em; z-index: 1000;">
+<i class="fa fa-question-circle" style="color:  var(--accent3); font-size:32px; background-color: transparent; border-color: transparent;"></i>
+</a>
+-->
+
+{% if not is_owner %}
+<a id="help-button" style="position: absolute; display: block; padding: 0px; right: 1.2em; bottom: 1em; cursor: pointer;" data-toggle="tooltip" title="Log an issue"> 
+    <i class="fa fa-question-circle" style="color: var(--accent3); font-size:32px; background-color: transparent; border-color: transparent;"></i>
+</a>
+{% endif %}
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+        leftpx = $("#titleHeaderText").outerWidth() + 16;
+    
+        {% if is_owner %}
+        var btnHelpTemplate = `
+        <div style="display: block; position: absolute; left: CALC_LEFTpx; bottom: 8px; margin: 0px; padding: 0px;">
+            <a class = "ml-2" href="/displayissues/{{ group.pk }}/" data-toggle="tooltip" title="View logged issues">
+                <i class="fa fa-bell" style="color:  var(--accent3); font-size:24px; background-color: transparent; border-color: transparent;" style="display: block;">
+                <i class="fa fa-exclamation" style="color: var(--accent4); font-size:14px; background-color: transparent; border-color: transparent; display: block;
+                    position: absolute; top: -4px; right: 0px; z-index: 100;"></i></i>
+                
+            </a>
+        </div>`
+        
+        $("#titleHeader").append(btnHelpTemplate.replaceAll('CALC_LEFT', leftpx));
+
+        {% endif %}
+    });
+
+    function showHelp(e) {
+        var top_clamp = ($(document).height() - $("#help-menu").outerHeight()) / 2.0;
+        var left_clamp = ($(document).width() - $("#help-menu").outerWidth()) / 2.0;
+
+        // Ensure the context menu stays within document bounds (doesn't get cutoff)
+        var top = Math.max(top_clamp, 0);
+        var left = Math.max(left_clamp, 0);
+
+        // Show the context menu
+        $("#help-menu").css({
+            display: "block",
+            top: top,
+            left: left,
+            position: "fixed"
+        }).addClass("show");
+    }
+
+    function submitHelp() {
+        //POST request to submit issue
+        $.ajax({
+            type: 'POST',
+            url: '/dashboard/{{ group.pk }}/reportissue/',
+            data: $('#form-help').serialize(),
+            success: function(res) {
+                console.log(res);
+            }
+        });
+
+        // Reset the form to be empty
+        $('#title').val('');
+        $('#description').val('');
+    }
+
+
+    $(document).ready(function() {        
+        // On desktop, show the roles menu as when right-clicking
+        $('#help-button').on('click', function(e) {
+            showHelp(e);
+            return false; //blocks default Webbrowser right click menu
+        })
+
+
+        // Discard changes on context menu, close it
+        $("#close-help").on("click", function() {
+            $("#help-menu").removeClass("show").hide();
+        });
+
+        // Submit changes on context menu, close it
+        $("#submit-help").on("click", function() {
+            $("#help-menu").removeClass("show").hide();
+            submitHelp();
+        });
+
+        // Prevent Enter key from submitting POST forms
+        $(window).keydown(function(e) {
+            if(e.key == "Enter") {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+
+
+    // Escape key to close context menu
+    $(document).keyup(function(e) {
+        if (e.key == "Escape") {
+            $("#help-menu").removeClass("show").hide();
+            return false;
+        }
+    });
+</script>

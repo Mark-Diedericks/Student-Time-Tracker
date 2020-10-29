@@ -13,6 +13,7 @@ from tracker_app.indv_views import groupdashview
 from tracker_app.indv_views import creategroupview
 from tracker_app.indv_views import addmemberview
 from tracker_app.indv_views import manageroles
+from tracker_app.indv_views import issuemanager
 
 import csv, io
 from django.contrib import messages
@@ -58,7 +59,26 @@ def setroles(request, group_id, mem_id):
 def creategroup(request):
     return creategroupview.creategroup(request)
 
+
 ##### ADD MEMBER ######
 @login_required
 def addmember(request,group_id):
     return addmemberview.addmember(request,group_id)
+
+
+##### ADD ISSUE ######
+@login_required
+def reportissue(request, group_id):
+    return issuemanager.reportissue(request, group_id)
+
+
+##### REMOVE ISSUE ######
+@login_required
+def removeissue(request, group_id):
+    return issuemanager.removeissue(request, group_id)
+
+
+##### DISPLAY ISSUES ######
+@login_required
+def displayissues(request, group_id):
+    return issuemanager.display_issues(request, group_id)

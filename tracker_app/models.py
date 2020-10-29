@@ -53,3 +53,13 @@ class SubmittedPeriod(models.Model):
 
     startDate = models.DateField(default=datetime.today)
     endDate = models.DateField(default=datetime.today)
+
+class ReportIssue(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    groupMember = models.ForeignKey(GroupMember, on_delete=models.CASCADE, null=True, blank=True)
+    title = models.TextField()
+    description = models.TextField()
+    dateSubmitted = models.DateField(default=datetime.today)
+
+
+

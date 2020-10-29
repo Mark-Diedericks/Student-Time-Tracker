@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+<div class="row justify-content-center    group-content" style="margin-top: 2vh;">
+    <h2>Reported Issues</h2>
+</div>
+
+<div class="row  justify-content-center" style="margin-bottom: 2vh;">
+    <a href="/dashboard/{{ group.pk }}/">Back to Group</a>
+</div>
+
+<script>
+    function removeIssue(i_id) {
+        //POST request to submit issue
+        $.ajax({
+            type: 'POST',
+            url: '/dashboard/{{ group.pk }}/removeissue/',
+            data: $('#form-remove' + i_id).serialize(),
+            success: function(res) {
+                console.log(res);
+                if (res.status == "ok") {
+                    $("#issue" + i_id).remove();    // Remove the table row if successful
+                }
+            }
+        });
+    }
+</script>
+
+<div class="row justify-content-center" style="padding-left: 8em; padding-right: 8em;">
+    <table style="width:100%; margin-top: 2vh;">
+        <!--<tr>
+            <th>Group Name</th>
+            <th>{{ i.group.groupName }}</th>
+        </tr>-->
+        <tr>
+            <th>Date Submitted</th>
+            <th>Submitted by</th>
+            <th>Subject</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+        {% for i in issues %}
+        <tr id="issue{{i.id}}">
+            <td>{{ i.dateSubmitted }}</td>
+            <td>{{ i.groupMember.person.get_full_name }}</td>
+            <td>{{ i.title }}</td>
+            <td>{{ i.description }}</td>
+            <td style="font-style: italic; cursor: pointer;" onclick="removeIssue({{i.id}});">Remove</td>
+            
+            <form id="form-remove{{i.id}}" style="display: none;"> {% csrf_token %}
+                <input name="issueID" type="number" style="display: none;" value="{{i.id}}">
+            </form>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+{% endblock %}

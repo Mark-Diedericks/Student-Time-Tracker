@@ -54,6 +54,7 @@ def groupdash(request, group_id, mem_id):
 
     can_log = False         # Can log time if the week isn't submitted, view below
     can_sub = leader        # Can submit week logs if they're a leader
+    
     # Determine
     # Get the current week (which is where times will be submitted to)
     for w in weeks:
